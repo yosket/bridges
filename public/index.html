@@ -3,24 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Link Checker</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-<script src="js/analyzer.js"></script>
+<script src="js/app.js"></script>
 </head>
 <body>
-<h1>Link Checker</h1>
-<div ng-controller="AppCtrl">
-	<form name="checker" ng-submit="check()" novalidate>
-		<input type="url" name="url" ng-model="query" required>
-		<input type="submit" value="送信" ng-disabled="checker.$invalid">
-	</form>
-	<p ng-show="checking">通信中 ...</p>
-	<div ng-show="status">
-		<p>{{pages.length}} URLs.</p>
-		<ul>
-			<li ng-repeat="page in pages">{{page.url}} - {{page.enabled}}</li>
-		</ul>
+<div class="container">
+	<h1 class="page-header">Link Checker</h1>
+	<div ng-controller="AppController">
+		<form name="checker" ng-submit="check()" class="well form-inline" novalidate>
+			<input type="url" name="url" ng-model="query" class="form-control" required>
+			<input type="submit" value="Check !!" class="btn btn-primary" ng-disabled="checker.$invalid">
+		</form>
+		<pre>{{Website}}</pre>
+		<p>{{Website.message}}</p>
+		<div ng-show="Website.pages.length">
+			<p>{{Website.pages.length}} URLs.</p>
+			<table class="table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>URL</th>
+						<th>Enabled</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="page in Website.pages">
+						<td>{{$index + 1}}</td>
+						<td><a href="{{page.url}}" target="_blank">{{page.url}}</a></td>
+						<td ng-if="page.enabled">○</td>
+						<td ng-if="!page.enabled">
+							<form ng-submit="secondCheck()">
+								<button type="submit" value="{{page.url}}" class="btn btn-primary" ng-model="secondQuery">Check !!</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
-	<p ng-hide="status">{{message}}</p>
 </div>
 </body>
 </html>
