@@ -15,10 +15,9 @@
 			<input type="url" name="url" ng-model="query" class="form-control" required>
 			<input type="submit" value="Check !!" class="btn btn-primary" ng-disabled="checker.$invalid">
 		</form>
-		<pre>{{Website}}</pre>
 		<p>{{Website.message}}</p>
-		<div ng-show="Website.pages.length">
-			<p>{{Website.pages.length}} URLs.</p>
+		<div ng-show="Website.pages.length" ng-repeat="page in Website.pages">
+			<h2>{{page.url}} <small>{{page.inner.length}} URLs included.</small></h2>
 			<table class="table">
 				<thead>
 					<tr>
@@ -28,15 +27,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="page in Website.pages">
+					<tr ng-repeat="innerPage in page.inner">
 						<td>{{$index + 1}}</td>
-						<td><a href="{{page.url}}" target="_blank">{{page.url}}</a></td>
-						<td ng-if="page.enabled">○</td>
-						<td ng-if="!page.enabled">
-							<form ng-submit="secondCheck()">
-								<button type="submit" value="{{page.url}}" class="btn btn-primary" ng-model="secondQuery">Check !!</button>
-							</form>
-						</td>
+						<td><a href="{{innerPage.url}}" target="_blank">{{innerPage.url}}</a></td>
+						<td>{{innerPage.enabled ? '○' : '×'}}</td>
 					</tr>
 				</tbody>
 			</table>
