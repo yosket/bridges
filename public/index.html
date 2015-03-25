@@ -14,6 +14,7 @@
 		<form name="checker" ng-submit="check()" class="well form-inline" novalidate>
 			<input type="url" name="url" ng-model="query" class="form-control" required>
 			<input type="submit" value="Check !!" class="btn btn-primary" ng-disabled="checker.$invalid">
+			<button type="button" class="btn btn-default" ng-click="reload()">Reset</button>
 		</form>
 		<p>{{Website.message}}</p>
 		<div ng-show="Website.pages.length" ng-repeat="page in Website.pages">

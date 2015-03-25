@@ -84,8 +84,14 @@ class Analyzer {
 			throw new Exception('不正なURLです');
 		}
 		$this->_url = $url;
+	}
+
+	// URL内の要素を検索
+	public function search() {
 		$html = phpQuery::newDocumentFile($this->_url);
 		phpQuery::newDocument($html);
+
+		// a要素を検索してhref属性を返す
 		foreach (pq('a') as $a) {
 			$href = pq($a)->attr('href');
 			$url = $this->_absUrl($this->_url, $href);
