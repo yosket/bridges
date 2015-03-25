@@ -18,7 +18,11 @@
 		</form>
 		<p>{{Website.message}}</p>
 		<div ng-show="Website.pages.length" ng-repeat="page in Website.pages">
-			<h2>{{page.url}} <small>{{page.inner.length}} URLs included.</small></h2>
+			<h2>
+				{{page.url}}
+				<small ng-if="page.inner.length">{{page.inner.length}} URLs included.</small>
+				<small ng-if="!page.inner.length">Searching ...</small>
+			</h2>
 			<table class="table">
 				<thead>
 					<tr>

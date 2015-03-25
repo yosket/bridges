@@ -6,29 +6,29 @@
 	app.factory('Website', function($q, $http) {
 		return {
 			domain: '',
-			checkList: [],
 			pages: [],
 			message: '',
+			index: 0,
 			checkStart: function(url) {
 				var parser = new URL(url);
 				this.domain = parser.origin;
-				this.checkList.push({
+				this.pages.push({
 					url: url,
-					enabled: null
+					enabled: null,
+					inner: []
 				});
-				var index = 0;
 				var self = this;
 				var loop = function() {
-					self.check(self.checkList[index].url).then(function() {
-						self.checkList[index].enabled = true;
-						index++;
-						if (typeof self.checkList[index] !== 'undefined') {
+					self.check(self.pages[self.index].url).then(function() {
+						self.pages[self.index].enabled = true;
+						self.index++;
+						if (typeof self.pages[self.index] !== 'undefined') {
 							loop();
 						}
 					}, function() {
-						self.checkList[index].enabled = false;
-						index++;
-						if (typeof self.checkList[index] !== 'undefined') {
+						self.pages[self.index].enabled = false;
+						self.index++;
+						if (typeof self.pages[self.index] !== 'undefined') {
 							loop();
 						}
 					});
@@ -52,26 +52,26 @@
 					var data = response.data;
 					if (data.status) {
 						angular.forEach(data.hrefs, function(href) {
-							if (!isDuplicated(href, currentPage.inner)) {
-								currentPage.inner.push({
+							if (!isDuplicated(href, t.pages[t.index].inner)) {
+								t.pages[t.index].inner.push({
 									url: href,
 									enabled: null
 								});
 							}
 							var dFlg = false;
-							angular.forEach(t.checkList, function(item) {
+							angular.forEach(t.pages, function(item) {
 								if (item.url === href) {
 									dFlg = true;
 								}
 							});
 							if (href.indexOf(t.domain) === 0 && !dFlg && href.search(/(.jpg|.gif|.png)$/i) === -1) {
-								t.checkList.push({
+								t.pages.push({
 									url: href,
-									enabled: null
+									enabled: null,
+									inner: []
 								});
 							}
 						});
-						t.pages.push(currentPage);
 						t.message = '';
 						d.resolve();
 					} else {
