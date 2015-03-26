@@ -8,9 +8,8 @@ class Analyzer {
 
 	private function _check($url) {
 		// 正常なURLでない場合エラーが出るため@をつける
-		$head = @get_headers($url);
-		$result = $head[0];
-		return $result ? true : false;
+		$header = @get_headers($url);
+		return $header !== false && !preg_match('#^HTTP/.*\s+[404]+\s#i', $header[0]) ? true : false;
 	}
 
 	// ベースURL と 相対パス情報から、絶対パス(http(s)://～～)を返す

@@ -7,6 +7,7 @@
 		return {
 			top: '',
 			pages: [],
+			cache: [],
 			message: '',
 			current: 0,
 			check: function(url) {
@@ -56,11 +57,26 @@
 									url: href,
 									enabled: null
 								});
+								var cached = false;
+								angular.forEach(self.cache, function(cache) {
+									if (cache.url === href) {
+										cached = cache;
+										return;
+									}
+								});
 								var index = self.current;
 								var innerIndex = self.pages[self.current].inner.length - 1;
-								self.isAccessible(href).then(function(result) {
-									self.pages[index].inner[innerIndex].enabled = result;
-								});
+								if (cached) {
+									self.pages[index].inner[innerIndex].enabled = cached.enabled;
+								} else {
+									self.isAccessible(href).then(function(result) {
+										self.pages[index].inner[innerIndex].enabled = result;
+										self.cache.push({
+											url: href,
+											enabled: result
+										});
+									});
+								}
 							}
 							var dFlg = false;
 							angular.forEach(self.pages, function(item) {
