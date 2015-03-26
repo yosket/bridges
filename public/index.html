@@ -5,7 +5,7 @@
 <title>Link Checker</title>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 <style>
-h2, td {
+h2, p, td {
 	word-break: break-all;
 }
 </style>
@@ -21,7 +21,11 @@ h2, td {
 			<input type="submit" value="Check !!" class="btn btn-primary" ng-disabled="checker.$invalid">
 			<button type="button" class="btn btn-default" ng-click="reload()">Reset</button>
 		</form>
-		<p>{{Website.message}}</p>
+		<p ng-show="Website.pages.length">
+			サイト内に <strong>{{Website.pages.length | number}}</strong> ページを検出<br>
+			全部で <strong>{{Website.cache.length | number}}</strong> のURLを調査済み
+		</p>
+		<p class="alert alert-info" ng-show="Website.message">{{Website.message}}</p>
 		<div ng-show="Website.pages.length" ng-repeat="page in Website.pages">
 			<h2>
 				{{page.url}}
