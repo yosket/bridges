@@ -44,17 +44,19 @@
 				self.message = self.pages[self.current].url + ' を調査中 ...';
 				self.search(self.pages[self.current].url).then(function() {
 					self.pages[self.current].enabled = true;
-					self.current++;
-					if (typeof self.pages[self.current] !== 'undefined') {
-						self.crawl();
-					}
+					hasNextPage();
 				}, function() {
 					self.pages[self.current].enabled = false;
+					hasNextPage();
+				});
+				var hasNextPage = function() {
 					self.current++;
 					if (typeof self.pages[self.current] !== 'undefined') {
 						self.crawl();
+					} else {
+						self.message = '';
 					}
-				});
+				};
 			},
 
 			// サーバーへアクセスして結果をpagesとcacheに入れていく関数
@@ -110,10 +112,8 @@
 								});
 							}
 						});
-						self.message = '';
 						d.resolve();
 					} else {
-						self.message = data.message;
 						d.reject();
 					}
 				});
