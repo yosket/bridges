@@ -5,12 +5,11 @@
 
 	app.factory('Website', function($q, $http) {
 		return {
-			domain: '',
 			top: '',
 			pages: [],
 			message: '',
 			current: 0,
-			check2: function(url) {
+			check: function(url) {
 				this.set(url);
 				this.crawl();
 			},
@@ -25,14 +24,19 @@
 			},
 			crawl: function() {
 				var self = this;
-				this.search(this.pages[this.current].url).then(function() {
+				self.message = self.pages[self.current].url + ' を調査中 ...';
+				self.search(self.pages[self.current].url).then(function() {
 					self.pages[self.current].enabled = true;
 					self.current++;
-					self.search(self.pages[self.current].url);
+					if (typeof self.pages[self.current] !== 'undefined') {
+						self.crawl();
+					}
 				}, function() {
 					self.pages[self.current].enabled = false;
 					self.current++;
-					self.search(self.pages[self.current].url);
+					if (typeof self.pages[self.current] !== 'undefined') {
+						self.crawl();
+					}
 				});
 			},
 			search: function(url) {
@@ -52,6 +56,11 @@
 									url: href,
 									enabled: null
 								});
+								var index = self.current;
+								var innerIndex = self.pages[self.current].inner.length - 1;
+								self.isAccessible(href).then(function(result) {
+									self.pages[index].inner[innerIndex].enabled = result;
+								});
 							}
 							var dFlg = false;
 							angular.forEach(self.pages, function(item) {
@@ -59,7 +68,7 @@
 									dFlg = true;
 								}
 							});
-							if (href.indexOf(self.domain) === 0 && !dFlg && href.search(/(.jpg|.gif|.png)$/i) === -1) {
+							if (href.indexOf(self.top) === 0 && !dFlg && href.search(/(.jpg|.gif|.png)$/i) === -1) {
 								self.pages.push({
 									url: href,
 									enabled: null,
@@ -75,89 +84,26 @@
 					}
 				});
 				return d.promise;
+			},
+			isAccessible: function(url) {
+				var d = $q.defer();
+				$http.get('api/', {
+					params: {
+						url: url,
+						type: 'check'
+					}
+				}).then(function(response) {
+					d.resolve(response.data.status);
+				}, function() {
+					d.reject();
+				});
+				return d.promise;
 			}
-			// index: 0,
-			// checkStart: function(url) {
-			// 	var parser = new URL(url);
-			// 	this.domain = parser.origin;
-			// 	this.pages.push({
-			// 		url: url,
-			// 		enabled: null,
-			// 		inner: []
-			// 	});
-			// 	var self = this;
-			// 	var loop = function() {
-			// 		self.check(self.pages[self.index].url).then(function() {
-			// 			self.pages[self.index].enabled = true;
-			// 			self.index++;
-			// 			if (typeof self.pages[self.index] !== 'undefined') {
-			// 				loop();
-			// 			}
-			// 		}, function() {
-			// 			self.pages[self.index].enabled = false;
-			// 			self.index++;
-			// 			if (typeof self.pages[self.index] !== 'undefined') {
-			// 				loop();
-			// 			}
-			// 		});
-			// 	};
-			// 	loop();
-			// },
-			// check: function(url) {
-			// 	var d = $q.defer();
-			// 	var currentPage = {
-			// 		url: url,
-			// 		inner: []
-			// 	};
-			// 	this.message = url + 'を調査中 ...';
-			// 	var t = this;
-			// 	$http.get('api/', {
-			// 		params: {
-			// 			url: url,
-			// 			type: 'search'
-			// 		}
-			// 	}).then(function(response) {
-			// 		var data = response.data;
-			// 		if (data.status) {
-			// 			angular.forEach(data.hrefs, function(href) {
-			// 				if (!isDuplicated(href, t.pages[t.index].inner)) {
-			// 					t.pages[t.index].inner.push({
-			// 						url: href,
-			// 						enabled: null
-			// 					});
-			// 				}
-			// 				var dFlg = false;
-			// 				angular.forEach(t.pages, function(item) {
-			// 					if (item.url === href) {
-			// 						dFlg = true;
-			// 					}
-			// 				});
-			// 				if (href.indexOf(t.domain) === 0 && !dFlg && href.search(/(.jpg|.gif|.png)$/i) === -1) {
-			// 					t.pages.push({
-			// 						url: href,
-			// 						enabled: null,
-			// 						inner: []
-			// 					});
-			// 				}
-			// 			});
-			// 			t.message = '';
-			// 			d.resolve();
-			// 		} else {
-			// 			t.message = data.message;
-			// 			d.reject();
-			// 		}
-			// 	});
-			// 	return d.promise;
-			// }
 		};
 	});
 
 	app.controller('AppController', ['$scope', 'Website', function AppController($scope, Website) {
 		$scope.Website = Website;
-		$scope.check = function() {
-			// Website.checkStart($scope.query);
-			Website.check2($scope.query);
-		};
 		$scope.reload = function() {
 			location.reload();
 		}

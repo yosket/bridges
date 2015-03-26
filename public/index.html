@@ -11,7 +11,7 @@
 <div class="container">
 	<h1 class="page-header">Link Checker</h1>
 	<div ng-controller="AppController">
-		<form name="checker" ng-submit="check()" class="well form-inline" novalidate>
+		<form name="checker" ng-submit="Website.check(query)" class="well form-inline" novalidate>
 			<input type="url" name="url" ng-model="query" class="form-control" required>
 			<input type="submit" value="Check !!" class="btn btn-primary" ng-disabled="checker.$invalid">
 			<button type="button" class="btn btn-default" ng-click="reload()">Reset</button>
@@ -20,10 +20,11 @@
 		<div ng-show="Website.pages.length" ng-repeat="page in Website.pages">
 			<h2>
 				{{page.url}}
-				<small ng-if="page.inner.length">{{page.inner.length}} URLs included.</small>
-				<small ng-if="!page.inner.length">Searching ...</small>
+				<small ng-if="page.enabled == null">Searching ...</small>
+				<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
+				<small ng-if="page.enabled == false">Disconnected.</small>
 			</h2>
-			<table class="table">
+			<table class="table" ng-if="page.enabled">
 				<thead>
 					<tr>
 						<th></th>
@@ -35,7 +36,9 @@
 					<tr ng-repeat="innerPage in page.inner">
 						<td>{{$index + 1}}</td>
 						<td><a href="{{innerPage.url}}" target="_blank">{{innerPage.url}}</a></td>
-						<td>{{innerPage.enabled ? '○' : '×'}}</td>
+						<td ng-if="innerPage.enabled == null"><span class="text-muted">Checking ...</span></td>
+						<td ng-if="innerPage.enabled == true"><span class="label label-success">OK.</span></td>
+						<td ng-if="innerPage.enabled == false"><span class="label label-danger">NG!</span></td>
 					</tr>
 				</tbody>
 			</table>

@@ -14,7 +14,7 @@ try {
 		switch ($_GET['type']) {
 			case 'check':
 				$result = [
-					'status' => ture,
+					'status' => true,
 				];
 				break;
 			case 'search':
