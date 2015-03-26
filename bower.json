@@ -1,0 +1,19 @@
+{
+  "name": "link-checker",
+  "version": "0.0.0",
+  "homepage": "https://github.com/yosket/link-checker",
+  "authors": [
+    "Yosuke Tanaka <yosket87@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "~3.3.4"
+  }
+}
