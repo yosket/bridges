@@ -5,15 +5,29 @@
 
 	app.factory('Website', function($q, $http) {
 		return {
+
+			// 入力されたURLを格納
 			top: '',
+
+			// チェックしたページとそのページ内のリンクを格納
 			pages: [],
+
+			// URLベースでアクセス可否を格納
 			cache: [],
+
+			// どのURLをチェック中か等
 			message: '',
+
+			// pagesをループさせる際のインデックス
 			current: 0,
+
+			// Viewから呼ばれる関数
 			check: function(url) {
 				this.set(url);
 				this.crawl();
 			},
+
+			// 入力されたURLを格納する関数
 			set: function(url) {
 				this.top = url;
 				this.pages.push({
@@ -23,6 +37,8 @@
 				});
 				this.message = url + ' の調査を開始';
 			},
+
+			// pagesをループさせる関数
 			crawl: function() {
 				var self = this;
 				self.message = self.pages[self.current].url + ' を調査中 ...';
@@ -40,6 +56,8 @@
 					}
 				});
 			},
+
+			// サーバーへアクセスして結果をpagesとcacheに入れていく関数
 			search: function(url) {
 				var self = this;
 				var d = $q.defer();
@@ -101,6 +119,8 @@
 				});
 				return d.promise;
 			},
+
+			// 一つのURLのアクセス可否を調べる関数
 			isAccessible: function(url) {
 				var d = $q.defer();
 				$http.get('api/', {
@@ -125,6 +145,7 @@
 		}
 	}]);
 
+	// 配列内の重複した値の有無をチェックする関数
 	var isDuplicated = function(str, array) {
 		var duplicated = false;
 		angular.forEach(array, function(value) {
@@ -134,5 +155,4 @@
 		});
 		return duplicated;
 	}
-
 })();
