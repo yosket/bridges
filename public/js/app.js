@@ -104,7 +104,9 @@
 									dFlg = true;
 								}
 							});
-							if (href.indexOf(self.top) === 0 && !dFlg && href.search(/(.jpg|.gif|.png)$/i) === -1) {
+							var isInnerSite = href.indexOf(self.top) === 0;
+							var isImageFile = href.search(/(.jpg|.gif|.png)$/i) !== -1;
+							if (isInnerSite && !dFlg && !isImageFile) {
 								self.pages.push({
 									url: href,
 									enabled: null,

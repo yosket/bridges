@@ -4,6 +4,7 @@ require_once('../../Vendor/autoload.php');
 
 class Analyzer {
 	private $_url;
+	private $_originals = [];
 	private $_hrefs = [];
 
 	private function _check($url) {
@@ -92,12 +93,19 @@ class Analyzer {
 
 		// a要素を検索してhref属性を返す
 		foreach (pq('a') as $a) {
-			$href = pq($a)->attr('href');
-			$url = $this->_absUrl($this->_url, $href);
+			$original = pq($a)->attr('href');
+			if (!in_array($original, $this->_originals)) {
+				$this->_originals[] = $original;
+			}
+			$url = $this->_absUrl($this->_url, $original);
 			if (!in_array($url, $this->_hrefs)) {
 				$this->_hrefs[] = $url;
 			}
 		}
+	}
+
+	public function getOriginals() {
+		return $this->_originals;
 	}
 
 	public function getHrefs() {

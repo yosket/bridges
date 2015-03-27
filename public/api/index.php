@@ -21,6 +21,7 @@ try {
 				$analyzer->search();
 				$result = [
 					'status' => true,
+					'originals' => $analyzer->getOriginals(),
 					'hrefs' => $analyzer->getHrefs(),
 				];
 				break;
