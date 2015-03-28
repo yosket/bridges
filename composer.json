@@ -4,6 +4,9 @@
     "require": {
         "electrolinux/phpquery": "dev-master"
     },
+    "require-dev": {
+        "heroku/heroku-buildpack-php": "*"
+    },
     "authors": [
         {
             "name": "Yosuke Tanaka",
