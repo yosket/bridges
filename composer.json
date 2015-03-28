@@ -15,6 +15,7 @@
     ],
     "minimum-stability": "dev",
     "config": {
+        "bin-dir": "vendor/bin",
         "vendor-dir": "Vendor"
     }
 }
