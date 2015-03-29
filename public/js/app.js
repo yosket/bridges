@@ -21,6 +21,8 @@
 			// pagesをループさせる際のインデックス
 			current: 0,
 
+			complete: false,
+
 			// Viewから呼ばれる関数
 			check: function(url) {
 				this.set(url);
@@ -41,7 +43,7 @@
 			// pagesをループさせる関数
 			crawl: function() {
 				var self = this;
-				self.message = self.pages[self.current].url + ' を調査中 ...';
+				self.message = 'Analyzing: ' + self.pages[self.current].url;
 				self.search(self.pages[self.current].url).then(function() {
 					self.pages[self.current].enabled = true;
 					hasNextPage();
@@ -55,6 +57,7 @@
 						self.crawl();
 					} else {
 						self.message = '';
+						self.complete = true;
 					}
 				};
 			},
