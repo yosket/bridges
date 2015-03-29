@@ -1,0 +1,12 @@
+{
+  "name": "bridge",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-compass": "*",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-watch": "*"
+  }
+}
