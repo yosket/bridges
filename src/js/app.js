@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	var app = angular.module('app', []);
+	var app = angular.module('app', ['ngAnimate']);
 
 	app.factory('Website', function($q, $http) {
 		return {
