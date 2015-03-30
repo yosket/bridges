@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bridges - The broken link checker</title>
+<title>Bridges - The broken links finder.</title>
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Michroma">
 <link rel="stylesheet" href="css/style.css">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
@@ -19,7 +19,10 @@
 <div id="page_1" class="page-1" ng-show="!Website.top">
 	<div class="container">
 		<div class="box">
-			<h1>Bridges</h1>
+			<h1>
+				Bridges<br>
+				<small>The broken links finder.</small>
+			</h1>
 			<form name="checker" ng-submit="Website.check(query)" class="row" novalidate>
 				<p><input type="url" name="url" ng-model="query" placeholder="http://www.example.com/" required></p>
 				<p><input type="submit" value="Check !!" class="btn-start" ng-disabled="checker.$invalid"></p>

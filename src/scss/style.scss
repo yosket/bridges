@@ -69,6 +69,12 @@ h1 {
 	text-shadow: 0 0 20px #000;
 	color: #fff;
 	letter-spacing: -3px;
+	line-height: .7;
+	small {
+		font-size: 26px;
+		color: #DDD;
+		letter-spacing: 0;
+	}
 }
 input[type="url"] {
 	background: transparent;
