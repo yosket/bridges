@@ -5,8 +5,3 @@ Vendor
 bower_components
 node_modules
 public
-src/scss/bootstrap
-src/scss/_bootstrap.scss
-src/scss/_bootstrap-compass.scss
-src/scss/_bootstrap-mincer.scss
-src/scss/_bootstrap-sprockets.scss
