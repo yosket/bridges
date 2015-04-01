@@ -175,6 +175,15 @@ img {
 	left: 25%;
 	width: 75%;
 	padding: 3em;
+	.data {
+		span {
+			display: block;
+		}
+		strong {
+			display: block;
+			font-size: 40px;
+		}
+	}
 }
 h2, p, td {
 	word-break: break-all;
