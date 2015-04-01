@@ -30,8 +30,6 @@ module.exports = function(grunt) {
 		},
 
 		clean: [
-			'!<%= config.public %>/.git',
-			'!<%= config.public %>/composer.json',
 			'<%= config.public %>/*'
 		],
 
