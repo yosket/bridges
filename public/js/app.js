@@ -21,6 +21,7 @@
 			// pagesをループさせる際のインデックス
 			current: 0,
 
+			errorCount: 0,
 			complete: false,
 
 			// Viewから呼ばれる関数
@@ -73,6 +74,7 @@
 					}
 				}).then(function(response) {
 					var data = response.data;
+					console.log(data);
 					if (data.status) {
 						angular.forEach(data.hrefs, function(href) {
 							if (!isDuplicated(href, self.pages[self.current].inner)) {
@@ -98,6 +100,9 @@
 											url: href,
 											enabled: result
 										});
+										if (!result) {
+											self.errorCount++;
+										}
 									});
 								}
 							}
@@ -115,6 +120,7 @@
 									enabled: null,
 									inner: []
 								});
+								setResultHeight();
 							}
 						});
 						d.resolve();
@@ -148,7 +154,21 @@
 		$scope.reload = function() {
 			location.reload();
 		}
+		setResultHeight();
 	}]);
+
+	app.filter('deleteDomain', function(Website) {
+		return function(input) {
+			var result = input.replace(Website.top, '');
+			return result ? result : Website.top;
+		};
+	});
+
+	var setResultHeight = function() {
+		var winHeight = document.documentElement.clientHeight;
+		var resultHeight = winHeight - 53 - 47;
+		angular.element(document.querySelectorAll('.result, .result-box')).css('height', resultHeight + 'px');
+	};
 
 	// 配列内の重複した値の有無をチェックする関数
 	var isDuplicated = function(str, array) {

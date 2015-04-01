@@ -13,11 +13,11 @@
 </head>
 <body ng-controller="AppController">
 <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="navbar-header"><a href="/" class="navbar-brand">Bridges</a></div>
 	</div>
 </nav>
-<div id="page_1" class="page-1" ng-if="!Website.top">
+<div class="top" ng-if="!Website.top">
 	<div class="container">
 		<h1>
 			Bridges<br>
@@ -29,8 +29,8 @@
 		</form>
 	</div>
 </div>
-<div id="page_2" class="page-2" ng-if="Website.top && !Website.complete">
-	<div class="container" ng-show="Website.pages[Website.current].url">
+<div class="summery" ng-if="Website.top">
+	<div class="container-fluid">
 		<p class="alert alert-info" ng-show="Website.message">{{Website.message}}</p>
 		<div class="row">
 			<div class="col-md-6">
@@ -39,44 +39,50 @@
 			<div class="col-md-6">
 				<p>
 					サイト内に <strong>{{Website.pages.length | number}}</strong> ページを検出<br>
-					全部で <strong>{{Website.cache.length | number}}</strong> のURLを調査済み
+					全部で <strong>{{Website.cache.length | number}}</strong> のURLを調査済み<br>
+					<span class="text-danger">エラー数 <strong>{{Website.errorCount | number}}</strong></span>
 				</p>
 			</div>
 		</div>
 	</div>
 </div>
-<div id="page_3" class="page-3" ng-if="Website.complete">
-	<div class="container">
-		<div ng-show="Website.pages.length" ng-repeat="page in Website.pages" class="result-box">
-			<h2>
-				{{page.url}}<br>
-				<small ng-if="page.enabled == null">Searching ...</small>
-				<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
-				<small ng-if="page.enabled == false">Disconnected.</small>
-			</h2>
-			<div class="row">
-				<div class="col-md-3">
-					<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
-				</div>
-				<div class="col-md-9">
-					<table class="table" ng-if="page.enabled">
-						<thead>
-							<tr>
-								<th>No.</th>
-								<th>URL</th>
-								<th>Enabled</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="innerPage in page.inner">
-								<td>{{$index + 1}}</td>
-								<td><a href="{{innerPage.url}}" target="_blank">{{innerPage.url}}</a></td>
-								<td ng-if="innerPage.enabled == null"><span class="text-muted">Checking ...</span></td>
-								<td ng-if="innerPage.enabled == true"><span class="label label-success">OK.</span></td>
-								<td ng-if="innerPage.enabled == false"><span class="label label-danger">NG!</span></td>
-							</tr>
-						</tbody>
-					</table>
+<div class="result" ng-show="Website.top">
+	<div ng-repeat="page in Website.pages" class="page">
+		<span>{{page.url | deleteDomain}}</span>
+		<div class="result-box">
+			<div class="container-fluid">
+				<h2>
+					<a href="{{page.url}}" target="_blank">{{page.url}}</a><br>
+					<small ng-if="page.enabled == null">Searching ...</small>
+					<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
+					<small ng-if="page.enabled == false">Disconnected.</small>
+				</h2>
+				<div class="row">
+					<div class="col-md-3">
+						<a href="{{page.url}}" target="_blank">
+							<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
+						</a>
+					</div>
+					<div class="col-md-9">
+						<table class="table" ng-if="page.enabled">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>URL</th>
+									<th>Enabled</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="innerPage in page.inner">
+									<td>{{$index + 1}}</td>
+									<td><a href="{{innerPage.url}}" target="_blank">{{innerPage.url}}</a></td>
+									<td ng-if="innerPage.enabled == null"><span class="text-muted">Checking ...</span></td>
+									<td ng-if="innerPage.enabled == true"><span class="label label-success">OK.</span></td>
+									<td ng-if="innerPage.enabled == false"><span class="label label-danger">NG!</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
