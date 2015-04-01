@@ -29,7 +29,11 @@ module.exports = function(grunt) {
 			}
 		},
 
-		clean: ['<%= config.public %>/'],
+		clean: [
+			'!<%= config.public %>/.git',
+			'!<%= config.public %>/composer.json',
+			'<%= config.public %>/*'
+		],
 
 		copy: {
 			init: {
@@ -80,6 +84,6 @@ module.exports = function(grunt) {
 	grunt.registerTask('build', [
 		'clean',
 		'compass',
-		'copy'
+		'copy:main'
 	]);
 }
