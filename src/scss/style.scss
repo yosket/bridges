@@ -132,22 +132,36 @@ img {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			display: block;
-			padding: 1em;
+			padding: 1em 1em 1em 3em;
 			cursor: pointer;
+			position: relative;
+			.ico {
+				position: absolute;
+				top: 50%;
+				left: 1em;
+				transform: translateY(-50%);
+			}
+			.text-success {
+				color: $brand-success;
+			}
+			.text-danger {
+				color: $brand-danger;
+			}
 		}
 		.result-box {
 			display: none;
 			opacity: 0;
-			background: rgba(0, 0, 0, .5);
 			position: fixed;
 			top: 53px;
 			left: 25%;
 			width: 75%;
 			padding: 3em;
+			overflow-x: hidden;
 			overflow-y: auto;
 			-webkit-transition: opacity .3s;
 			transition: opacity .3s;
 			text-shadow: 0 0 .25em #000;
+			background: rgba(0, 0, 0, .5);
 			h2 {
 				color: #fff;
 				a {
@@ -176,6 +190,9 @@ img {
 	width: 75%;
 	padding: 3em;
 	.data {
+		color: #fff;
+		border: 0;
+		background: rgba($brand-primary, .25);
 		span {
 			display: block;
 		}

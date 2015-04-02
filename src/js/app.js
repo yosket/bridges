@@ -21,7 +21,11 @@
 			// pagesをループさせる際のインデックス
 			current: 0,
 
-			errorCount: 0,
+			count: {
+				success: 0,
+				warning: 0,
+				error: 0
+			},
 			complete: false,
 
 			// Viewから呼ばれる関数
@@ -100,9 +104,7 @@
 											url: href,
 											enabled: result
 										});
-										if (!result) {
-											self.errorCount++;
-										}
+										result ? self.count.success++ : self.count.error++;
 									});
 								}
 							}
