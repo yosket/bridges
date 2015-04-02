@@ -13,6 +13,27 @@ class Analyzer {
 		return $header !== false && !preg_match('#^HTTP/.*\s+[404]+\s#i', $header[0]) ? true : false;
 	}
 
+	private function _customGetHeaders($url) {
+		$headers = @get_headers($url);
+		if (!$headers) {
+			return $headers;
+		}
+		$res = [];
+		$c = -1;
+		foreach ($headers as $h) {
+			if (strpos($h, 'HTTP/') === 0) {
+				$res[++$c]['status-line'] = $h;
+				$res[$c]['status-code'] = (int)strstr($h, ' ');
+			} else {
+				$sep = strpos($h,': ');
+				$res[$c][strtolower(substr($h, 0, $sep))] = substr($h, $sep + 2);
+			}
+		}
+		$res['count'] = $c;
+		$res['last-status'] = $res[$c]['status-code'];
+		return $res;
+	}
+
 	// ベースURL と 相対パス情報から、絶対パス(http(s)://～～)を返す
 	private function _absUrl($baseURL, $relativePath) {
 		if ($relativePath == '') {
@@ -80,6 +101,9 @@ class Analyzer {
 	}
 
 	public function __construct($url) {
+		// echo '<pre>';
+		// var_dump($this->_customGetHeaders($url));
+		// echo '</pre>';
 		if (!$this->_check($url)) {
 			throw new Exception('不正なURLです');
 		}
