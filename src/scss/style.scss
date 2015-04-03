@@ -104,6 +104,15 @@ img {
         background: rgba(0, 175, 204, .75);
     }
 }
+.text-success {
+	color: $brand-success;
+}
+.text-warning {
+	color: $brand-warning;
+}
+.text-danger {
+	color: $brand-danger;
+}
 .result {
 	background: rgba(0, 0, 0, .25);
 	color: #fff;
@@ -140,12 +149,6 @@ img {
 				top: 50%;
 				left: 1em;
 				transform: translateY(-50%);
-			}
-			.text-success {
-				color: $brand-success;
-			}
-			.text-danger {
-				color: $brand-danger;
 			}
 		}
 		.result-box {
@@ -189,10 +192,14 @@ img {
 	left: 25%;
 	width: 75%;
 	padding: 3em;
+	.lead a {
+		color: #fff;
+	}
 	.data {
 		color: #fff;
 		border: 0;
 		background: rgba($brand-primary, .25);
+		text-shadow: 0 0 .25em #000;
 		span {
 			display: block;
 		}

@@ -42,6 +42,8 @@
 				</div>
 			</div>
 		</div>
+		<h2 class="page-header">Your site's URL</h2>
+		<p class="lead"><a href="{{Website.top}}" target="_blank">{{Website.top}}</a></p>
 		<h2 class="page-header">Summery</h2>
 		<div class="row">
 			<div class="col-md-6">
@@ -60,19 +62,19 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="data data-1 well text-center">
-					<span>Success</span>
+					<span class="text-success"><i class="fa fa-check fa-lg"></i> Success</span>
 					<strong>{{Website.count.success | number}}</strong>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="data data-2 well text-center">
-					<span>Warning</span>
+					<span class="text-warning"><i class="fa fa-exclamation-triangle fa-lg"></i> Warning</span>
 					<strong>{{Website.count.warning | number}}</strong>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="data data-3 well text-center">
-					<span>Error</span>
+					<span class="text-danger"><i class="fa fa-times fa-lg"></i> Error</span>
 					<strong>{{Website.count.error | number}}</strong>
 				</div>
 			</div>
@@ -106,14 +108,14 @@
 							<thead>
 								<tr>
 									<th>No.</th>
-									<th>URL</th>
-									<th>Enabled</th>
+									<th>Href value</th>
+									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-repeat="innerPage in page.inner">
 									<td>{{$index + 1}}</td>
-									<td><a href="{{innerPage.url}}" target="_blank">{{innerPage.url}}</a></td>
+									<td><a href="{{innerPage.absoluteUrl}}" target="_blank">{{innerPage.url}}</a></td>
 									<td ng-if="innerPage.enabled == null">
 										<span class="text-muted">Checking ...</span>
 									</td>
