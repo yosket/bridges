@@ -207,9 +207,6 @@
 
 	app.controller('AppController', ['$scope', 'Website', function AppController($scope, Website) {
 		$scope.Website = Website;
-		$scope.reload = function() {
-			location.reload();
-		};
 		setResultHeight();
 	}]);
 
@@ -227,24 +224,27 @@
 		angular.element(document.querySelectorAll('.result-box')).css('height', resultHeight + 'px');
 	};
 
-	var getAbsoluteUrl = (function() {
-		var wimg = new Image();
-		var work = document.createElement('iframe');
-		work.style.display = 'none';
-		document.body.appendChild(work);
-		var wdoc = work.contentWindow.document;
-		return function(path, base) {
-			var url = path;
-			if (!base) {
-				wimg.src = path;
-				url = wimg.src;
-			} else {
-				wdoc.open();
-				wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
-				wdoc.close();
-				url = wdoc.getElementsByTagName('a')[0].href;
-			}
-			return url;
-		};
-	})();
+	var getAbsoluteUrl;
+	window.onload = function() {
+		getAbsoluteUrl = (function() {
+			var wimg = new Image();
+			var work = document.createElement('iframe');
+			work.style.display = 'none';
+			document.body.appendChild(work);
+			var wdoc = work.contentWindow.document;
+			return function(path, base) {
+				var url = path;
+				if (!base) {
+					wimg.src = path;
+					url = wimg.src;
+				} else {
+					wdoc.open();
+					wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
+					wdoc.close();
+					url = wdoc.getElementsByTagName('a')[0].href;
+				}
+				return url;
+			};
+		})();
+	};
 })();
