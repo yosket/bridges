@@ -62,6 +62,10 @@
 										d.reject(response.data.status);
 										break;
 									default:
+										// status が false なら
+										if (!response.data.status) {
+											// エラーにする処理
+										}
 										d.notify(response.data.status);
 										break;
 								}
@@ -78,23 +82,26 @@
 						var callback = function(response) {
 							var data = response.data;
 							if (data.status) {
-								angular.forEach(data.hrefs, function(href) {
+								angular.forEach(data.originals, function(href) {
+									var absoluteUrl = getAbsoluteUrl(href, self.top);
 									var addInnerPage = function() {
 										// 現在のページにまだ存在しないURLなら
 										if (!isDuplicated(href, self.pages[self.current].inner)) {
 											// ページ内URLに追加
 											var newUrl = {
 												url: href,
-												enabled: null
+												absoluteUrl: absoluteUrl,
+												enabled: null,
+												status: null
 											};
 											self.pages[self.current].inner.push(newUrl);
 										}
 									};
-									var addCache = function() {
+									var checkCache = function() {
 										// cache に追加済みかチェック
 										var cached = false;
 										angular.forEach(self.cache, function(cache) {
-											if (cache.url === href) {
+											if (cache.url === absoluteUrl) {
 												cached = cache;
 												return;
 											}
@@ -104,45 +111,55 @@
 										if (cached) {
 											// cache に追加済みの場合はページ内URLの enabled を更新
 											self.pages[index].inner[innerIndex].enabled = cached.enabled;
+											self.pages[index].inner[innerIndex].status = cached.status;
 										} else {
-											var success = function(result) {
-												self.pages[index].inner[innerIndex].enabled = result;
-												self.count.success++;
+											var pushToCache = function(enabled, result) {
 												// cache に追加
 												var newUrl = {
-													url: href,
-													enabled: result
+													url: absoluteUrl,
+													enabled: enabled,
+													status: result
 												};
 												self.cache.push(newUrl);
 											};
+											var success = function(result) {
+												self.pages[index].inner[innerIndex].enabled = 'success';
+												self.pages[index].inner[innerIndex].status = result;
+												self.count.success++;
+												pushToCache('success', result);
+											};
 											var failed = function(result) {
-												self.pages[index].inner[innerIndex].enabled = result;
+												self.pages[index].inner[innerIndex].enabled = 'error';
+												self.pages[index].inner[innerIndex].status = result;
 												self.count.error++;
+												pushToCache('error', result);
 											};
 											var notify = function(result) {
-												self.pages[index].inner[innerIndex].enabled = result;
+												self.pages[index].inner[innerIndex].enabled = 'warning';
+												self.pages[index].inner[innerIndex].status = result;
 												self.count.warning++;
+												pushToCache('warning', result);
 											};
 											// cache に未追加の場合はアクセス可否をチェック
-											isAccessible(href).then(success, failed, notify);
+											isAccessible(absoluteUrl).then(success, failed, notify);
 										}
 									};
 									var addPage = function() {
 										// pages に追加済みかチェック
 										var dFlg = false;
 										angular.forEach(self.pages, function(item) {
-											if (item.url === href) {
+											if (item.url === absoluteUrl) {
 												dFlg = true;
 											}
 										});
 										// サイト内のURLかどうかチェック
-										var isInnerSite = href.indexOf(self.top) === 0;
+										var isInnerSite = absoluteUrl.indexOf(self.top) === 0;
 										// 画像ファイルかどうかチェック
-										var isImageFile = href.search(/(.jpg|.gif|.png)$/i) !== -1;
+										var isImageFile = absoluteUrl.search(/(.jpg|.gif|.png)$/i) !== -1;
 										// 条件に合致すれば pages に追加
 										if (isInnerSite && !dFlg && !isImageFile) {
 											var newPage = {
-												url: href,
+												url: absoluteUrl,
 												enabled: null,
 												inner: []
 											};
@@ -151,7 +168,7 @@
 										}
 									};
 									addInnerPage();
-									addCache();
+									checkCache();
 									addPage();
 								});
 								d.resolve();

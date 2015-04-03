@@ -116,11 +116,14 @@
 									<td ng-if="innerPage.enabled == null">
 										<span class="text-muted">Checking ...</span>
 									</td>
-									<td ng-if="innerPage.enabled == true">
-										<span class="label label-success">{{innerPage.enabled}}</span>
+									<td ng-if="innerPage.enabled == 'success'">
+										<span class="label label-success">{{innerPage.status}}</span>
 									</td>
-									<td ng-if="innerPage.enabled == false">
-										<span class="label label-danger">{{innerPage.enabled}}</span>
+									<td ng-if="innerPage.enabled == 'error'">
+										<span class="label label-danger">{{innerPage.status}}</span>
+									</td>
+									<td ng-if="innerPage.enabled == 'warning'">
+										<span class="label label-warning">{{innerPage.status}}</span>
 									</td>
 								</tr>
 							</tbody>
