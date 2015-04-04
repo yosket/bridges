@@ -164,7 +164,7 @@
 												inner: []
 											};
 											self.pages.push(newPage);
-											setResultHeight();
+											setHeight(['.result-box']);
 										}
 									};
 									addInnerPage();
@@ -196,7 +196,7 @@
 							self.complete = true;
 						}
 					};
-					self.message = 'Analyzing: ' + self.pages[self.current].url;
+					self.message = self.pages[self.current].url;
 					search(self.pages[self.current].url).then(success, failed);
 				};
 				set(url);
@@ -207,7 +207,23 @@
 
 	app.controller('AppController', ['$scope', 'Website', function AppController($scope, Website) {
 		$scope.Website = Website;
-		setResultHeight();
+		$scope.mouse = {
+			on: function(index) {
+				$scope.summery = true;
+				return $scope.activePage = index;
+			},
+			off: function(index) {
+				$scope.summery = false;
+				return $scope.activePage = null;
+			}
+		};
+		$scope.isActive = function(index) {
+			return $scope.activePage == index;
+		};
+		setHeight(['.summery', '.result']);
+		window.addEventListener('resize', function() {
+			setHeight(['.summery', '.result', '.result-box']);
+		});
 	}]);
 
 	app.filter('deleteDomain', function(Website) {
@@ -217,11 +233,12 @@
 		};
 	});
 
-	var setResultHeight = function() {
+	var setHeight = function(selectors) {
 		var winHeight = document.documentElement.clientHeight;
 		var resultHeight = winHeight - 53 - 47;
-		angular.element(document.querySelectorAll('.result')).css('height', resultHeight + 'px');
-		angular.element(document.querySelectorAll('.result-box')).css('height', resultHeight + 'px');
+		angular.forEach(selectors, function(selector) {
+			angular.element(document.querySelectorAll(selector)).css('height', resultHeight + 'px');
+		});
 	};
 
 	var getAbsoluteUrl;

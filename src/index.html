@@ -18,121 +18,126 @@
 		<div class="navbar-header"><a href="/" class="navbar-brand">Bridges</a></div>
 	</div>
 </nav>
-<div class="top" ng-if="!Website.top">
+<div class="top" ng-show="!Website.top">
 	<div class="container">
 		<h1>
 			Bridges<br>
 			<small>The broken links finder.</small>
 		</h1>
 		<form name="checker" ng-submit="Website.check(query)" class="row" novalidate>
-			<p><input type="url" name="url" ng-model="query" placeholder="Enter your website's URL" required></p>
+			<p><input type="url" name="url" ng-model="query" placeholder="Enter your site's URL" required></p>
 			<p><input type="submit" value="Check !!" class="btn-start" ng-disabled="checker.$invalid"></p>
 		</form>
 	</div>
 </div>
-<div class="summery" ng-if="Website.top">
-	<div class="container-fluid">
-		<div class="alert alert-info" ng-show="Website.message">
+<div class="display">
+	<div class="summery" ng-show="Website.top" ng-class="{back: summery}">
+		<div class="container-fluid">
+			<h2 class="page-header">Your site</h2>
+			<p class="lead"><a href="{{Website.top}}" target="_blank">{{Website.top}}</a></p>
+			<h2 class="page-header">Summery</h2>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="data well text-center">
+						<span>Pages in your site</span>
+						<strong>{{Website.pages.length | number}}</strong>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="data well text-center">
+						<span>URLs in your site</span>
+						<strong>{{Website.cache.length | number}}</strong>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="data data-1 well text-center">
+						<span class="text-success"><i class="fa fa-check fa-lg"></i> Success</span>
+						<strong>{{Website.count.success | number}}</strong>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="data data-2 well text-center">
+						<span class="text-warning"><i class="fa fa-exclamation-triangle fa-lg"></i> Warning</span>
+						<strong>{{Website.count.warning | number}}</strong>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="data data-3 well text-center">
+						<span class="text-danger"><i class="fa fa-times fa-lg"></i> Error</span>
+						<strong>{{Website.count.error | number}}</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="result" ng-show="Website.top">
+		<div ng-repeat="page in Website.pages" class="page" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)" ng-class="{active: isActive($index)}">
+			<span>
+				<span class="ico text-primary" ng-if="page.enabled == null"><i class="fa fa-spinner fa-lg fa-spin"></i></span>
+				<span class="ico text-success" ng-if="page.enabled == true"><i class="fa fa-check fa-lg"></i></span>
+				<span class="ico text-danger" ng-if="page.enabled == false"><i class="fa fa-times fa-lg"></i></span>
+				{{page.url | deleteDomain}}
+			</span>
+		</div>
+	</div>
+	<div class="result-box" id="result-box-{{$index}}" ng-repeat="page in Website.pages" ng-show="isActive($index)" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)">
+		<div class="container-fluid">
+			<h2>
+				<a href="{{page.url}}" target="_blank">{{page.url}}</a><br>
+				<small ng-if="page.enabled == null">Searching ...</small>
+				<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
+				<small ng-if="page.enabled == false">Disconnected.</small>
+			</h2>
 			<div class="row">
 				<div class="col-md-3">
-					<img src="http://capture.heartrails.com/400x300?{{Website.pages[Website.current].url}}" alt="{{Website.pages[Website.current].url}}">
+					<a href="{{page.url}}" target="_blank">
+						<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
+					</a>
 				</div>
 				<div class="col-md-9">
-					{{Website.message}}
-				</div>
-			</div>
-		</div>
-		<h2 class="page-header">Your site's URL</h2>
-		<p class="lead"><a href="{{Website.top}}" target="_blank">{{Website.top}}</a></p>
-		<h2 class="page-header">Summery</h2>
-		<div class="row">
-			<div class="col-md-6">
-				<div class="data well text-center">
-					<span>Pages in your site</span>
-					<strong>{{Website.pages.length | number}}</strong>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="data well text-center">
-					<span>URLs in your site</span>
-					<strong>{{Website.cache.length | number}}</strong>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="data data-1 well text-center">
-					<span class="text-success"><i class="fa fa-check fa-lg"></i> Success</span>
-					<strong>{{Website.count.success | number}}</strong>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="data data-2 well text-center">
-					<span class="text-warning"><i class="fa fa-exclamation-triangle fa-lg"></i> Warning</span>
-					<strong>{{Website.count.warning | number}}</strong>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="data data-3 well text-center">
-					<span class="text-danger"><i class="fa fa-times fa-lg"></i> Error</span>
-					<strong>{{Website.count.error | number}}</strong>
+					<table class="table" ng-if="page.enabled">
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>Href value</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="innerPage in page.inner">
+								<td>{{$index + 1}}</td>
+								<td><a href="{{innerPage.absoluteUrl}}" target="_blank">{{innerPage.url}}</a></td>
+								<td ng-if="innerPage.enabled == null">
+									<span class="text-muted">Checking ...</span>
+								</td>
+								<td ng-if="innerPage.enabled == 'success'">
+									<span class="label label-success">{{innerPage.status}}</span>
+								</td>
+								<td ng-if="innerPage.enabled == 'error'">
+									<span class="label label-danger">{{innerPage.status}}</span>
+								</td>
+								<td ng-if="innerPage.enabled == 'warning'">
+									<span class="label label-warning"><i class="fa fa-exclamation-triangle"></i></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="result" ng-show="Website.top">
-	<div ng-repeat="page in Website.pages" class="page">
-		<span>
-			<span class="ico text-primary" ng-if="page.enabled == null"><i class="fa fa-spinner fa-lg fa-spin"></i></span>
-			<span class="ico text-success" ng-if="page.enabled == true"><i class="fa fa-check fa-lg"></i></span>
-			<span class="ico text-danger" ng-if="page.enabled == false"><i class="fa fa-times fa-lg"></i></span>
-			{{page.url | deleteDomain}}
-		</span>
-		<div class="result-box">
-			<div class="container-fluid">
-				<h2>
-					<a href="{{page.url}}" target="_blank">{{page.url}}</a><br>
-					<small ng-if="page.enabled == null">Searching ...</small>
-					<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
-					<small ng-if="page.enabled == false">Disconnected.</small>
-				</h2>
-				<div class="row">
-					<div class="col-md-3">
-						<a href="{{page.url}}" target="_blank">
-							<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
-						</a>
-					</div>
-					<div class="col-md-9">
-						<table class="table" ng-if="page.enabled">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>Href value</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="innerPage in page.inner">
-									<td>{{$index + 1}}</td>
-									<td><a href="{{innerPage.absoluteUrl}}" target="_blank">{{innerPage.url}}</a></td>
-									<td ng-if="innerPage.enabled == null">
-										<span class="text-muted">Checking ...</span>
-									</td>
-									<td ng-if="innerPage.enabled == 'success'">
-										<span class="label label-success">{{innerPage.status}}</span>
-									</td>
-									<td ng-if="innerPage.enabled == 'error'">
-										<span class="label label-danger">{{innerPage.status}}</span>
-									</td>
-									<td ng-if="innerPage.enabled == 'warning'">
-										<span class="label label-warning">{{innerPage.status}}</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+<div class="notification alert alert-info" ng-show="Website.message">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-3">
+				<img src="http://capture.heartrails.com/400x300?{{Website.pages[Website.current].url}}" alt="{{Website.pages[Website.current].url}}">
+			</div>
+			<div class="col-md-9">
+				Analyzing:<br>
+				{{Website.message}}
 			</div>
 		</div>
 	</div>
