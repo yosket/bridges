@@ -164,7 +164,6 @@
 												inner: []
 											};
 											self.pages.push(newPage);
-											setHeight(['.result-box']);
 										}
 									};
 									addInnerPage();
@@ -209,6 +208,7 @@
 		$scope.Website = Website;
 		$scope.mouse = {
 			on: function(index) {
+				setHeight(['.result-box']);
 				$scope.summery = true;
 				return $scope.activePage = index;
 			},
@@ -256,7 +256,11 @@
 					url = wimg.src;
 				} else {
 					wdoc.open();
-					wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
+					wdoc.write('<head><base href="' + base + '" \/><\/head><body><\/body>');
+					// wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
+					var a = document.createElement('a');
+					a.href = path;
+					wdoc.appendChild(a);
 					wdoc.close();
 					url = wdoc.getElementsByTagName('a')[0].href;
 				}

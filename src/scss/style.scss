@@ -31,31 +31,11 @@ img {
 	font-family: 'Michroma', sans-serif;
 	text-shadow: none;
 }
-.box {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	text-align: center;
-	width: 100%;
-	ul {
-		overflow: hidden;
-		list-style-type: none;
-		padding-left: 0;
-		li {
-			float: left;
-			width: calc(100% / 8);
-			img {
-				width: 100%;
-				height: auto;
-			}
-		}
-	}
-}
 .top {
 	position: absolute;
 	top: 50%;
 	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	text-align: center;
 	width: 100%;
@@ -99,6 +79,7 @@ img {
 	text-shadow: 0 0 2px #fff;
 	font-family: 'Michroma', sans-serif;
 	cursor: pointer;
+	-webkit-transition: all .6s;
 	transition: all .6s;
 	&:hover {
 		background: rgba(0, 175, 204, .75);
@@ -132,18 +113,6 @@ img {
 		}
 		&.active {
 			background: $brand-primary;
-			> span:after {
-				content: '';
-				height: 0;
-				width: 0;
-				position: absolute;
-				left: 100%;
-				top: 50%;
-				border: 10px solid transparent;
-				border-left: 10px solid $brand-primary;
-				-webkit-transform: translateY(-50%);
-				transform: translateY(-50%);
-			}
 		}
 		> span {
 			word-break: break-all;
@@ -157,6 +126,7 @@ img {
 				position: absolute;
 				top: 50%;
 				left: 1em;
+				-webkit-transform: translateY(-50%);
 				transform: translateY(-50%);
 			}
 		}
