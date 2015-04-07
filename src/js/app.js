@@ -248,19 +248,15 @@
 			var work = document.createElement('iframe');
 			work.style.display = 'none';
 			document.body.appendChild(work);
-			var wdoc = work.contentWindow.document;
 			return function(path, base) {
+				var wdoc = work.contentWindow.document;
 				var url = path;
 				if (!base) {
 					wimg.src = path;
 					url = wimg.src;
 				} else {
 					wdoc.open();
-					wdoc.write('<head><base href="' + base + '" \/><\/head><body><\/body>');
-					// wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
-					var a = document.createElement('a');
-					a.href = path;
-					wdoc.appendChild(a);
+					wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
 					wdoc.close();
 					url = wdoc.getElementsByTagName('a')[0].href;
 				}
