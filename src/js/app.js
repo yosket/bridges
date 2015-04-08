@@ -256,7 +256,7 @@
 					url = wimg.src;
 				} else {
 					wdoc.open();
-					wdoc.write('<head><base href="' + base + '" \/><\/head><body><p><a href="' + path + '"><\/a><\/p><\/body>');
+					wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
 					wdoc.close();
 					url = wdoc.getElementsByTagName('a')[0].href;
 				}
