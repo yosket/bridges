@@ -11,6 +11,11 @@
 			pages: [],
 			// URLベースでアクセス可否を格納
 			cache: [],
+			result: {
+				success: [],
+				warning: [],
+				error: []
+			},
 			// どのURLをチェック中か等
 			message: '',
 			// pagesをループさせる際のインデックス
@@ -126,18 +131,30 @@
 												self.pages[index].inner[innerIndex].enabled = 'success';
 												self.pages[index].inner[innerIndex].status = result;
 												self.count.success++;
+												self.result.success.push({
+													url: self.pages[index].inner[innerIndex].absoluteUrl,
+													status: result
+												});
 												pushToCache('success', result);
 											};
 											var failed = function(result) {
 												self.pages[index].inner[innerIndex].enabled = 'error';
 												self.pages[index].inner[innerIndex].status = result;
 												self.count.error++;
+												self.result.error.push({
+													url: self.pages[index].inner[innerIndex].absoluteUrl,
+													status: result
+												});
 												pushToCache('error', result);
 											};
 											var notify = function(result) {
 												self.pages[index].inner[innerIndex].enabled = 'warning';
 												self.pages[index].inner[innerIndex].status = result;
 												self.count.warning++;
+												self.result.warning.push({
+													url: self.pages[index].inner[innerIndex].absoluteUrl,
+													status: result
+												});
 												pushToCache('warning', result);
 											};
 											// cache に未追加の場合はアクセス可否をチェック
@@ -193,6 +210,7 @@
 						} else {
 							self.message = '';
 							self.complete = true;
+							console.log(self.result);
 						}
 					};
 					self.message = self.pages[self.current].url;
