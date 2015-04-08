@@ -132,7 +132,7 @@ img {
 		&.active {
 			background: $brand-primary;
 		}
-		> span {
+		> div {
 			word-break: break-all;
 			display: block;
 			padding: 1em 1em 1em 3em;
@@ -146,6 +146,11 @@ img {
 				left: 1em;
 				-webkit-transform: translateY(-50%);
 				transform: translateY(-50%);
+			}
+			.list-inline {
+				margin-bottom: 0;
+				text-align: right;
+				font-size: 70%;
 			}
 		}
 		&.ng-enter > span {
@@ -169,6 +174,7 @@ img {
 	background: rgba(0, 0, 0, .5);
 	h2 {
 		color: #fff;
+		margin-bottom: 3%;
 		a {
 			color: #fff;
 		}
@@ -198,7 +204,7 @@ img {
 	display: inline-block;
 	width: 5em;
 }
-.summery {
+.summary {
 	height: 100%;
 	padding: 3em;
 	overflow: auto;
@@ -232,6 +238,9 @@ img {
 			font-size: 40px;
 		}
 	}
+	.table a {
+		color: #fff;
+	}
 	&.back {
 		-webkit-filter: blur(5px);
 		filter: blur(5px);
@@ -246,6 +255,8 @@ img {
 	word-break: break-all;
 	border-radius: 0;
 	margin: 0;
+	color: #fff;
+	overflow: hidden;
 	&.ng-hide {
 		height: 0;
 	}
@@ -253,7 +264,7 @@ img {
 		height: 128px;
 		&:first-of-type {
 			float: left;
-			  margin: 0 5% 0 0;
+			margin: 0 5% 0 0;
 			img {
 				height: 100%;
 			}
@@ -261,6 +272,9 @@ img {
 		&:last-of-type {
 			overflow-x: hidden;
 			overflow-y: auto;
+			a {
+				color: #fff;
+			}
 		}
 	}
 }

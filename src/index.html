@@ -5,10 +5,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=960, initial-scale=1">
 <meta name="keywords" content="link, check">
-<meta name="description" content="あなたのウェブサイトに存在する全てのリンクをリストアップし、アクセス可否を調査します。">
-<meta property="og:title" content="Bridges">
+<meta name="description" content="All the links that exist in your web site to list up, investigate to see if you can access.">
+<meta property="og:title" content="Bridges - The broken links finder.">
 <meta property="og:url" content="http://fallen-bridges.com/">
-<meta property="og:description" content="The broken links finder">
+<meta property="og:description" content="All the links that exist in your web site to list up, investigate to see if you can access.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="http://fallen-bridges.com/img/ogp.jpg">
 <title>Bridges - The broken links finder.</title>
@@ -61,9 +61,9 @@
 			Bridges<br>
 			<small>The broken links finder.</small>
 		</h1>
-		<form name="checker" ng-submit="Website.check(query)" class="row" novalidate>
+		<form name="checker" ng-submit="Website.check(query)" class="row">
 			<p><input type="url" name="url" ng-model="query" placeholder="Enter your site's URL" required></p>
-			<p><input type="submit" value="Check !!" class="btn-start" ng-disabled="checker.$invalid"></p>
+			<p><input type="submit" value="Check !!" class="btn btn-default btn-start" ng-disabled="checker.$invalid"></p>
 		</form>
 	</div>
 </div>
@@ -73,30 +73,38 @@
 			<img src="http://capture.heartrails.com/400x300?{{Website.pages[Website.current].url}}" alt="{{Website.pages[Website.current].url}}">
 		</p>
 		<p>
-			Analyzing:<br>
-			{{Website.message}}
+			<small>Analyzing:</small><br>
+			<a href="{{Website.message}}" target="_blank">{{Website.message}}</a>
 		</p>
 	</div>
 </div>
 <div class="display" ng-show="Website.top" ng-class="{checking: Website.message}">
 	<div class="result" ng-show="Website.top">
 		<div ng-repeat="page in Website.pages" class="page" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)" ng-class="{active: isActive($index)}">
-			<span>
+			<div>
 				<span class="ico text-primary" ng-if="page.enabled == null"><i class="fa fa-spinner fa-lg fa-spin"></i></span>
 				<span class="ico text-success" ng-if="page.enabled == true"><i class="fa fa-check fa-lg"></i></span>
 				<span class="ico text-danger" ng-if="page.enabled == false"><i class="fa fa-times fa-lg"></i></span>
 				{{page.url | deleteDomain}}
-			</span>
+				<ul class="list-inline">
+					<li><i class="text-success fa fa-check"></i> {{page.count.success}}</li>
+					<li><i class="text-warning fa fa-exclamation-triangle"></i> {{page.count.warning}}</li>
+					<li><i class="text-danger fa fa-times"></i> {{page.count.error}}</li>
+				</ul>
+			</div>
 		</div>
 	</div>
-	<div class="summery" ng-class="{back: summery}">
+	<div class="summary" ng-class="{back: summary}">
 		<div class="container-fluid">
+			<div class="pull-right">
+				<a href="/" class="btn btn-default"><i class="fa fa-undo fa-lg"></i> Check other URL</a>
+			</div>
 			<section>
 				<h2 class="page-header"><i class="fa fa-sitemap fa-lg"></i> Your site</h2>
 				<p class="lead"><a href="{{Website.top}}" target="_blank">{{Website.top}}</a></p>
 			</section>
 			<section>
-				<h2 class="page-header"><i class="fa fa-list-alt fa-lg"></i> Summery</h2>
+				<h2 class="page-header"><i class="fa fa-list-alt fa-lg"></i> Summary</h2>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="data well text-center">
@@ -115,19 +123,19 @@
 					<div class="col-md-4">
 						<div class="data data-1 well text-center">
 							<span class="text-success"><i class="fa fa-check fa-lg"></i> Success</span>
-							<strong>{{Website.count.success | number}}</strong>
+							<strong>{{Website.result.success.length | number}}</strong>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="data data-2 well text-center">
 							<span class="text-warning"><i class="fa fa-exclamation-triangle fa-lg"></i> Warning</span>
-							<strong>{{Website.count.warning | number}}</strong>
+							<strong>{{Website.result.warning.length | number}}</strong>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="data data-3 well text-center">
 							<span class="text-danger"><i class="fa fa-times fa-lg"></i> Error</span>
-							<strong>{{Website.count.error | number}}</strong>
+							<strong>{{Website.result.error.length | number}}</strong>
 						</div>
 					</div>
 				</div>
@@ -146,7 +154,7 @@
 						<tbody>
 							<tr ng-repeat="error in Website.result.error">
 								<td>{{$index + 1}}</td>
-								<td>{{error.url}}</td>
+								<td><a href="{{error.absoluteUrl}}" target="_blank">{{error.url}}</a></td>
 								<td><span class="label label-danger">{{error.status}}</span></td>
 							</tr>
 						</tbody>
@@ -167,7 +175,7 @@
 						<tbody>
 							<tr ng-repeat="warning in Website.result.warning">
 								<td>{{$index + 1}}</td>
-								<td>{{warning.url}}</td>
+								<td><a href="{{warning.absoluteUrl}}" target="_blank">{{warning.url}}</a></td>
 								<td><span class="label label-warning"><i class="fa fa-exclamation-triangle"></i></span></td>
 							</tr>
 						</tbody>
@@ -184,14 +192,14 @@
 				<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
 				<small ng-if="page.enabled == false">Disconnected.</small>
 			</h2>
-			<div class="row">
+			<div class="row" ng-if="page.enabled">
 				<div class="col-md-3">
 					<a href="{{page.url}}" target="_blank">
 						<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
 					</a>
 				</div>
 				<div class="col-md-9">
-					<table class="table" ng-if="page.enabled">
+					<table class="table" ng-show="page.enabled">
 						<thead>
 							<tr>
 								<th>No.</th>

@@ -20,27 +20,32 @@
 			message: '',
 			// pagesをループさせる際のインデックス
 			current: 0,
-			count: {
-				success: 0,
-				warning: 0,
-				error: 0
-			},
 			complete: false,
 			// Viewから呼ばれる関数
 			check: function(url) {
 				var self = this;
 				var set = function(url) {
+					// ユーザーの入力URLを保存
 					self.top = url;
+					// 入力URLをpagesに追加
 					var newPage = {
 						url: url,
 						enabled: null,
-						inner: []
+						inner: [],
+						count: {
+							success: 0,
+							warning: 0,
+							error: 0
+						}
 					};
 					self.pages.push(newPage);
 				};
+				// サイト内をクロールする関数（未チェックのURLがなくなるまで再帰的に呼ばれる）
 				var crawl = function() {
+					// 1ページ内をスクレイピングしてURLを取得する関数
 					var search = function(url) {
 						var d = $q.defer();
+						// 配列内の重複チェック関数
 						var isDuplicated = function(str, array) {
 							var duplicated = false;
 							angular.forEach(array, function(value) {
@@ -50,6 +55,7 @@
 							});
 							return duplicated;
 						};
+						// あるURLのアクセス可否を調べる関数
 						var isAccessible = function(url) {
 							var d = $q.defer();
 							var api = 'api/headers.php';
@@ -117,6 +123,7 @@
 											// cache に追加済みの場合はページ内URLの enabled を更新
 											self.pages[index].inner[innerIndex].enabled = cached.enabled;
 											self.pages[index].inner[innerIndex].status = cached.status;
+											self.pages[index].count[cached.enabled]++;
 										} else {
 											var pushToCache = function(enabled, result) {
 												// cache に追加
@@ -130,7 +137,7 @@
 											var success = function(result) {
 												self.pages[index].inner[innerIndex].enabled = 'success';
 												self.pages[index].inner[innerIndex].status = result;
-												self.count.success++;
+												self.pages[index].count.success++;
 												self.result.success.push({
 													url: self.pages[index].inner[innerIndex].absoluteUrl,
 													status: result
@@ -140,7 +147,7 @@
 											var failed = function(result) {
 												self.pages[index].inner[innerIndex].enabled = 'error';
 												self.pages[index].inner[innerIndex].status = result;
-												self.count.error++;
+												self.pages[index].count.error++;
 												self.result.error.push({
 													url: self.pages[index].inner[innerIndex].absoluteUrl,
 													status: result
@@ -150,7 +157,7 @@
 											var notify = function(result) {
 												self.pages[index].inner[innerIndex].enabled = 'warning';
 												self.pages[index].inner[innerIndex].status = result;
-												self.count.warning++;
+												self.pages[index].count.warning++;
 												self.result.warning.push({
 													url: self.pages[index].inner[innerIndex].absoluteUrl,
 													status: result
@@ -178,7 +185,12 @@
 											var newPage = {
 												url: absoluteUrl,
 												enabled: null,
-												inner: []
+												inner: [],
+												count: {
+													success: 0,
+													warning: 0,
+													error: 0
+												}
 											};
 											self.pages.push(newPage);
 										}
@@ -233,11 +245,11 @@
 		$scope.mouse = {
 			on: function(index) {
 				setHeight(['.display']);
-				$scope.summery = true;
+				$scope.summary = true;
 				return $scope.activePage = index;
 			},
 			off: function(index) {
-				$scope.summery = false;
+				$scope.summary = false;
 				return $scope.activePage = null;
 			}
 		};
