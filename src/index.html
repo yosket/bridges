@@ -67,8 +67,29 @@
 		</form>
 	</div>
 </div>
-<div class="display">
-	<div class="summery" ng-show="Website.top" ng-class="{back: summery}">
+<div class="notification alert alert-info" ng-show="Website.message">
+	<div class="container-fluid">
+		<p>
+			<img src="http://capture.heartrails.com/400x300?{{Website.pages[Website.current].url}}" alt="{{Website.pages[Website.current].url}}">
+		</p>
+		<p>
+			Analyzing:<br>
+			{{Website.message}}
+		</p>
+	</div>
+</div>
+<div class="display" ng-show="Website.top" ng-class="{checking: Website.message}">
+	<div class="result" ng-show="Website.top">
+		<div ng-repeat="page in Website.pages" class="page" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)" ng-class="{active: isActive($index)}">
+			<span>
+				<span class="ico text-primary" ng-if="page.enabled == null"><i class="fa fa-spinner fa-lg fa-spin"></i></span>
+				<span class="ico text-success" ng-if="page.enabled == true"><i class="fa fa-check fa-lg"></i></span>
+				<span class="ico text-danger" ng-if="page.enabled == false"><i class="fa fa-times fa-lg"></i></span>
+				{{page.url | deleteDomain}}
+			</span>
+		</div>
+	</div>
+	<div class="summery" ng-class="{back: summery}">
 		<div class="container-fluid">
 			<section>
 				<h2 class="page-header"><i class="fa fa-sitemap fa-lg"></i> Your site</h2>
@@ -155,16 +176,6 @@
 			</section>
 		</div>
 	</div>
-	<div class="result" ng-show="Website.top">
-		<div ng-repeat="page in Website.pages" class="page" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)" ng-class="{active: isActive($index)}">
-			<span>
-				<span class="ico text-primary" ng-if="page.enabled == null"><i class="fa fa-spinner fa-lg fa-spin"></i></span>
-				<span class="ico text-success" ng-if="page.enabled == true"><i class="fa fa-check fa-lg"></i></span>
-				<span class="ico text-danger" ng-if="page.enabled == false"><i class="fa fa-times fa-lg"></i></span>
-				{{page.url | deleteDomain}}
-			</span>
-		</div>
-	</div>
 	<div class="result-box" id="result-box-{{$index}}" ng-repeat="page in Website.pages" ng-show="isActive($index)" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)">
 		<div class="container-fluid">
 			<h2>
@@ -208,19 +219,6 @@
 						</tbody>
 					</table>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="notification alert alert-info" ng-show="Website.message">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-3">
-				<img src="http://capture.heartrails.com/400x300?{{Website.pages[Website.current].url}}" alt="{{Website.pages[Website.current].url}}">
-			</div>
-			<div class="col-md-9">
-				Analyzing:<br>
-				{{Website.message}}
 			</div>
 		</div>
 	</div>

@@ -13,12 +13,14 @@ body {
 	height: 100%;
 	position: relative;
 	font-family: 'Michroma', sans-serif;
-	padding-top: 53px;
+	padding-top: 57px;
 	padding-bottom: 48px;
 	overflow-x: hidden;
 }
 img {
 	max-width: 100%;
+	max-height: 100%;
+	width: auto;
 	height: auto;
 }
 ::-webkit-input-placeholder {
@@ -30,6 +32,9 @@ img {
 	color: rgba(255, 255, 255, .5);
 	font-family: 'Michroma', sans-serif;
 	text-shadow: none;
+}
+.navbar {
+	min-height: 54px;
 }
 .top {
 	position: absolute;
@@ -97,13 +102,23 @@ img {
 .text-danger {
 	color: $brand-danger;
 }
+.display {
+	position: fixed;
+	top: 57px;
+	left: 0;
+	width: 100%;
+	-webkit-transition: all .3s;
+	transition: all .3s;
+	&.checking {
+		top: 217px;
+	}
+}
 .result {
 	background: rgba(0, 0, 0, .25);
 	color: #fff;
-	position: fixed;
-	top: 53px;
-	left: 0;
+	float: left;
 	width: 25%;
+	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
 	.page {
@@ -142,10 +157,11 @@ img {
 	}
 }
 .result-box {
-	position: fixed;
-	top: 53px;
+	position: absolute;
+	top: 0;
 	left: 25%;
 	width: 75%;
+	height: 100%;
 	padding: 3em;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -183,16 +199,16 @@ img {
 	width: 5em;
 }
 .summery {
-	position: fixed;
-	top: 53px;
-	left: 25%;
-	width: 75%;
+	height: 100%;
 	padding: 3em;
 	overflow: auto;
 	section {
 		margin: 5% 0 10%;
 		&:first-of-type {
 			margin-top: 0;
+			.page-header {
+				margin-top: 0;
+			}
 		}
 	}
 	.page-header {
@@ -223,17 +239,27 @@ img {
 }
 .notification {
 	background: $brand-primary;
-	position: fixed;
-	top: 25px;
-	right: 0;
-	width: 40%;
-	-webkit-transition: right .3s;
-	transition: right .3s;
+	height: 160px;
+	-webkit-transition: height .3s;
+	transition: height .3s;
 	z-index: 1030;
 	word-break: break-all;
-	border-radius: 8px 0 0 8px;
+	border-radius: 0;
+	margin: 0;
 	&.ng-hide {
-		right: -25%;
+		height: 0;
+	}
+	.container-fluid,
+	p {
+		height: 100%;
+	}
+	p:first-of-type {
+		float: left;
+		margin-right: 5%;
+	}
+	p:last-of-type {
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 }
 h2, p, td {

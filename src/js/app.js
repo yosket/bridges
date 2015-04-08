@@ -210,7 +210,6 @@
 						} else {
 							self.message = '';
 							self.complete = true;
-							console.log(self.result);
 						}
 					};
 					self.message = self.pages[self.current].url;
@@ -223,10 +222,17 @@
 	});
 
 	app.controller('AppController', ['$scope', 'Website', function AppController($scope, Website) {
+		var setHeight = function(selectors) {
+			var winHeight = document.documentElement.clientHeight;
+			var displayHeight = Website.message ? winHeight - 57 - 47 - 160 : winHeight - 57 - 47;
+			angular.forEach(selectors, function(selector) {
+				angular.element(document.querySelectorAll(selector)).css('height', displayHeight + 'px');
+			});
+		};
 		$scope.Website = Website;
 		$scope.mouse = {
 			on: function(index) {
-				setHeight(['.result-box']);
+				setHeight(['.display']);
 				$scope.summery = true;
 				return $scope.activePage = index;
 			},
@@ -238,9 +244,12 @@
 		$scope.isActive = function(index) {
 			return $scope.activePage == index;
 		};
-		setHeight(['.summery', '.result']);
+		$scope.$watch('Website.message', function() {
+			setHeight(['.display']);
+		});
+		setHeight(['.display']);
 		window.addEventListener('resize', function() {
-			setHeight(['.summery', '.result', '.result-box']);
+			setHeight(['.display']);
 		});
 	}]);
 
@@ -250,14 +259,6 @@
 			return result ? result : Website.top;
 		};
 	});
-
-	var setHeight = function(selectors) {
-		var winHeight = document.documentElement.clientHeight;
-		var resultHeight = winHeight - 53 - 47;
-		angular.forEach(selectors, function(selector) {
-			angular.element(document.querySelectorAll(selector)).css('height', resultHeight + 'px');
-		});
-	};
 
 	var getAbsoluteUrl;
 	window.onload = function() {
