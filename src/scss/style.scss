@@ -249,17 +249,19 @@ img {
 	&.ng-hide {
 		height: 0;
 	}
-	.container-fluid,
 	p {
-		height: 100%;
-	}
-	p:first-of-type {
-		float: left;
-		margin-right: 5%;
-	}
-	p:last-of-type {
-		overflow-x: hidden;
-		overflow-y: auto;
+		height: 128px;
+		&:first-of-type {
+			float: left;
+			  margin: 0 5% 0 0;
+			img {
+				height: 100%;
+			}
+		}
+		&:last-of-type {
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
 	}
 }
 h2, p, td {
