@@ -31,9 +31,28 @@
 </script>
 </head>
 <body ng-controller="AppController">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.3&appId=867594183306256";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header"><a href="/" class="navbar-brand">Bridges</a></div>
+		<ul class="nav navbar-nav pull-right navbar-text list-inline">
+			<li>
+				<div class="fb-share-button" data-href="http://fallen-bridges.com/" data-layout="button"></div>
+			</li>
+			<li>
+				<a class="twitter-share-button" href="https://twitter.com/share" data-count="none">ツイート</a>
+				<script>
+				window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+				</script>
+			</li>
+		</ul>
 	</div>
 </nav>
 <div class="top" ng-show="!Website.top">
