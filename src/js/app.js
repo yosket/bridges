@@ -242,24 +242,27 @@
 			});
 		};
 		$scope.Website = Website;
-		$scope.mouse = {
-			on: function(index) {
-				setHeight(['.display']);
-				$scope.summary = true;
-				return $scope.activePage = index;
-			},
-			off: function(index) {
-				$scope.summary = false;
-				return $scope.activePage = null;
-			}
-		};
-		$scope.isActive = function(index) {
-			return $scope.activePage == index;
-		};
 		$scope.$watch('Website.message', function() {
 			setHeight(['.display']);
 		});
 		setHeight(['.display', '.notification']);
+		$scope.checkChildRadio = function(index) {
+			if ($scope.selectedResultBox.id == index + 1) {
+				return $scope.closeResultBox(index);
+			} else {
+				return $scope.selectedResultBox.id = index + 1;
+			}
+		};
+		$scope.selectedResultBox = { id: 0 };
+		$scope.checkSelectedResultBox = function(index) {
+			return $scope.selectedResultBox.id == index + 1;
+		};
+		$scope.closeResultBox = function(index) {
+			return $scope.selectedResultBox.id = 0;
+		};
+		$scope.summary = function() {
+			return $scope.selectedResultBox.id > 0;
+		};
 		window.addEventListener('resize', function() {
 			setHeight(['.display', '.notification']);
 		});

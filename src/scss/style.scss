@@ -129,17 +129,24 @@ img {
 		&:first-child {
 			border-top: 0;
 		}
-		&.active {
-			background: $brand-primary;
-		}
 		> div {
 			word-break: break-all;
 			display: block;
 			padding: 1em 1em 1em 3em;
 			cursor: pointer;
 			position: relative;
-			-webkit-transition: left .3s;
-			transition: left .3s;
+			-webkit-transition: all .3s;
+			transition: all .3s;
+			margin-bottom: 0;
+			&.active {
+				background: $brand-primary;
+			}
+			&:hover {
+				background: $brand-primary;
+			}
+			input {
+				display: none;
+			}
 			.ico {
 				position: absolute;
 				top: 50%;
@@ -153,10 +160,10 @@ img {
 				font-size: 70%;
 			}
 		}
-		&.ng-enter > span {
+		&.ng-enter > div {
 			left: -100%;
 		}
-		&.ng-enter-active > span {
+		&.ng-enter-active > div {
 			left: 0;
 		}
 	}
@@ -172,6 +179,17 @@ img {
 	overflow-y: auto;
 	text-shadow: 0 0 .25em #000;
 	background: rgba(0, 0, 0, .5);
+	opacity: 1;
+	-webkit-transition: all .6s;
+	transition: all .6s;
+	&.ng-hide {
+		opacity: 0;
+	}
+	.close {
+		color: #FFF;
+		font-size: 36px;
+		opacity: .8;
+	}
 	h2 {
 		color: #fff;
 		margin-bottom: 3%;
@@ -243,7 +261,9 @@ img {
 	}
 	&.back {
 		-webkit-filter: blur(5px);
+		-moz-filter: blur(5px);
 		filter: blur(5px);
+		filter: url(#blur);
 	}
 }
 .notification {
@@ -290,4 +310,9 @@ h2 img {
 	text-align: center;
 	color: #fff;
 	padding: 1em 0;
+}
+svg {
+	height: 0;
+	width: 0;
+	position: absolute;
 }
