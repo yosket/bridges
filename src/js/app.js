@@ -236,7 +236,7 @@
 	app.controller('AppController', ['$scope', 'Website', function AppController($scope, Website) {
 		var setHeight = function(selectors) {
 			var winHeight = document.documentElement.clientHeight;
-			var displayHeight = Website.message ? winHeight - 57 - 47 - 160 : winHeight - 57 - 47;
+			var displayHeight = winHeight - 57 - 47;
 			angular.forEach(selectors, function(selector) {
 				angular.element(document.querySelectorAll(selector)).css('height', displayHeight + 'px');
 			});
@@ -259,9 +259,9 @@
 		$scope.$watch('Website.message', function() {
 			setHeight(['.display']);
 		});
-		setHeight(['.display']);
+		setHeight(['.display', '.notification']);
 		window.addEventListener('resize', function() {
-			setHeight(['.display']);
+			setHeight(['.display', '.notification']);
 		});
 	}]);
 

@@ -110,7 +110,7 @@ img {
 	-webkit-transition: all .3s;
 	transition: all .3s;
 	&.checking {
-		top: 217px;
+		width: 80%;
 	}
 }
 .result {
@@ -247,34 +247,27 @@ img {
 	}
 }
 .notification {
-	background: $brand-primary;
-	height: 160px;
-	-webkit-transition: height .3s;
-	transition: height .3s;
+	background: rgba($brand-primary, .25);
+	height: 100%;
+	width: 20%;
+	-webkit-transition: width .3s;
+	transition: width .3s;
 	z-index: 1030;
 	word-break: break-all;
 	border-radius: 0;
 	margin: 0;
 	color: #fff;
 	overflow: hidden;
+	float: right;
+	border: 0;
 	&.ng-hide {
-		height: 0;
+		width: 0;
 	}
-	p {
-		height: 128px;
-		&:first-of-type {
-			float: left;
-			margin: 0 5% 0 0;
-			img {
-				height: 100%;
-			}
-		}
-		&:last-of-type {
-			overflow-x: hidden;
-			overflow-y: auto;
-			a {
-				color: #fff;
-			}
+	p:last-of-type {
+		overflow-x: hidden;
+		overflow-y: auto;
+		a {
+			color: #fff;
 		}
 	}
 }
