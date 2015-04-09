@@ -80,8 +80,9 @@
 </div>
 <div class="display" ng-show="Website.top" ng-class="{checking: Website.message}">
 	<div class="result" ng-show="Website.top">
-		<div ng-repeat="page in Website.pages" class="page" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)" ng-class="{active: isActive($index)}">
-			<div>
+		<div ng-repeat="page in Website.pages" class="page">
+			<label>
+				<input type="radio" ng-model="selectedResultBox.id" name="resultPages" ng-value="$index + 1">
 				<span class="ico text-primary" ng-if="page.enabled == null"><i class="fa fa-spinner fa-lg fa-spin"></i></span>
 				<span class="ico text-success" ng-if="page.enabled == true"><i class="fa fa-check fa-lg"></i></span>
 				<span class="ico text-danger" ng-if="page.enabled == false"><i class="fa fa-times fa-lg"></i></span>
@@ -91,10 +92,10 @@
 					<li><i class="text-warning fa fa-exclamation-triangle"></i> {{page.count.warning}}</li>
 					<li><i class="text-danger fa fa-times"></i> {{page.count.error}}</li>
 				</ul>
-			</div>
+			</label>
 		</div>
 	</div>
-	<div class="summary" ng-class="{back: summary}">
+	<div class="summary" ng-class="{back: summary()}">
 		<div class="container-fluid">
 			<div class="pull-right">
 				<a href="/" class="btn btn-default"><i class="fa fa-undo fa-lg"></i> Check other URL</a>
@@ -184,8 +185,9 @@
 			</section>
 		</div>
 	</div>
-	<div class="result-box" id="result-box-{{$index}}" ng-repeat="page in Website.pages" ng-show="isActive($index)" ng-mouseenter="mouse.on($index)" ng-mouseleave="mouse.off($index)">
+	<div class="result-box" id="result-box-{{$index}}" ng-repeat="page in Website.pages" ng-show="checkSelectedResultBox($index)">
 		<div class="container-fluid">
+			<p class="pull-right"><button type="button" class="close" ng-click="closeResultBox($index)">&times;</button></p>
 			<h2>
 				<a href="{{page.url}}" target="_blank">{{page.url}}</a><br>
 				<small ng-if="page.enabled == null">Searching ...</small>

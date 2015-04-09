@@ -132,7 +132,7 @@ img {
 		&.active {
 			background: $brand-primary;
 		}
-		> div {
+		> label {
 			word-break: break-all;
 			display: block;
 			padding: 1em 1em 1em 3em;
@@ -140,6 +140,10 @@ img {
 			position: relative;
 			-webkit-transition: left .3s;
 			transition: left .3s;
+			margin-bottom: 0;
+			input {
+				display: none;
+			}
 			.ico {
 				position: absolute;
 				top: 50%;
@@ -153,10 +157,10 @@ img {
 				font-size: 70%;
 			}
 		}
-		&.ng-enter > span {
+		&.ng-enter > label {
 			left: -100%;
 		}
-		&.ng-enter-active > span {
+		&.ng-enter-active > label {
 			left: 0;
 		}
 	}
@@ -172,6 +176,11 @@ img {
 	overflow-y: auto;
 	text-shadow: 0 0 .25em #000;
 	background: rgba(0, 0, 0, .5);
+	.close {
+		color: #FFF;
+		font-size: 36px;
+		opacity: .8;
+	}
 	h2 {
 		color: #fff;
 		margin-bottom: 3%;
