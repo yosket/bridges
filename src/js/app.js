@@ -30,6 +30,7 @@
 					// 入力URLをpagesに追加
 					var newPage = {
 						url: url,
+						title: '',
 						enabled: null,
 						inner: [],
 						count: {
@@ -93,7 +94,8 @@
 						var callback = function(response) {
 							var data = response.data;
 							if (data.status) {
-								angular.forEach(data.originals, function(href) {
+								self.pages[self.current].title = data.title;
+								angular.forEach(data.hrefs, function(href) {
 									var absoluteUrl = getAbsoluteUrl(href, data.url);
 									var addInnerPage = function() {
 										// 現在のページにまだ存在しないURLなら
@@ -184,6 +186,7 @@
 										if (isInnerSite && !dFlg && !isImageFile) {
 											var newPage = {
 												url: absoluteUrl,
+												title: '',
 												enabled: null,
 												inner: [],
 												count: {

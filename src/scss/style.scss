@@ -185,6 +185,9 @@ img {
 	&.ng-hide {
 		opacity: 0;
 	}
+	.text-right {
+		overflow: hidden;
+	}
 	.close {
 		color: #FFF;
 		font-size: 36px;
@@ -205,6 +208,7 @@ img {
 	}
 	.table {
 		color: #fff;
+		margin-top: 3em;
 		tr td:first-of-type {
 			text-align: center;
 			white-space: nowrap;

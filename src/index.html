@@ -187,49 +187,53 @@
 	</div>
 	<div class="result-box" id="result-box-{{$index}}" ng-repeat="page in Website.pages" ng-show="checkSelectedResultBox($index)">
 		<div class="container-fluid">
-			<p class="pull-right"><button type="button" class="close" ng-click="closeResultBox($index)">&times;</button></p>
-			<h2>
-				<a href="{{page.url}}" target="_blank">{{page.url}}</a><br>
-				<small ng-if="page.enabled == null">Searching ...</small>
-				<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
-				<small ng-if="page.enabled == false">Disconnected.</small>
-			</h2>
+			<p class="text-right"><button type="button" class="close" ng-click="closeResultBox($index)">&times;</button></p>
 			<div class="row" ng-if="page.enabled">
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<a href="{{page.url}}" target="_blank">
 						<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
 					</a>
 				</div>
-				<div class="col-md-9">
-					<table class="table" ng-show="page.enabled">
-						<thead>
-							<tr>
-								<th>No.</th>
-								<th>Href value</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="innerPage in page.inner">
-								<td>{{$index + 1}}</td>
-								<td><a href="{{innerPage.absoluteUrl}}" target="_blank">{{innerPage.url}}</a></td>
-								<td ng-if="innerPage.enabled == null">
-									<span class="text-muted">Checking ...</span>
-								</td>
-								<td ng-if="innerPage.enabled == 'success'">
-									<span class="label label-success">{{innerPage.status}}</span>
-								</td>
-								<td ng-if="innerPage.enabled == 'error'">
-									<span class="label label-danger">{{innerPage.status}}</span>
-								</td>
-								<td ng-if="innerPage.enabled == 'warning'">
-									<span class="label label-warning"><i class="fa fa-exclamation-triangle"></i></span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="col-md-8">
+					<h2>
+						<a href="{{page.url}}" target="_blank">
+							{{page.title}}<br>
+							<small>{{page.url}}</small>
+						</a>
+						<br>
+						<small ng-if="page.enabled == null">Searching ...</small>
+						<small ng-if="page.enabled == true">{{page.inner.length}} URLs included.</small>
+						<small ng-if="page.enabled == false">Disconnected.</small>
+					</h2>
 				</div>
 			</div>
+			<table class="table" ng-show="page.enabled">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>Href value</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="innerPage in page.inner">
+						<td>{{$index + 1}}</td>
+						<td><a href="{{innerPage.absoluteUrl}}" target="_blank">{{innerPage.url}}</a></td>
+						<td ng-if="innerPage.enabled == null">
+							<span class="text-muted">Checking ...</span>
+						</td>
+						<td ng-if="innerPage.enabled == 'success'">
+							<span class="label label-success">{{innerPage.status}}</span>
+						</td>
+						<td ng-if="innerPage.enabled == 'error'">
+							<span class="label label-danger">{{innerPage.status}}</span>
+						</td>
+						<td ng-if="innerPage.enabled == 'warning'">
+							<span class="label label-warning"><i class="fa fa-exclamation-triangle"></i></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>

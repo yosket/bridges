@@ -2,61 +2,42 @@
 
 require_once('../../Vendor/autoload.php');
 
-class Analyzer {
-	private $_url;
-	private $_originals = [];
+// URL内の要素を検索
+function search($url) {
+	phpQuery::newDocumentFile($url);
+	// phpQuery::newDocument($html);
+	$data = [];
 
-	private function _check($url) {
-		// 正常なURLでない場合エラーが出るため@をつける
-		$header = @get_headers($url);
-		return $header !== false && !preg_match('#^HTTP/.*\s+[404]+\s#i', $header[0]) ? true : false;
+	// title要素を取得
+	foreach (pq('title') as $title) {
+		$data['title'] = $title->textContent;
 	}
 
-	public function __construct($url) {
-		if (!$this->_check($url)) {
-			throw new Exception('不正なURLです');
-		}
-		$this->_url = $url;
-	}
-
-	// URL内の要素を検索
-	public function search() {
-		$html = phpQuery::newDocumentFile($this->_url);
-		phpQuery::newDocument($html);
-
-		// a要素を検索してhref属性を返す
-		foreach (pq('a') as $a) {
-			$original = pq($a)->attr('href');
-			if (!in_array($original, $this->_originals)) {
-				$this->_originals[] = $original;
-			}
+	// a要素を検索してhref属性を取得
+	$data['hrefs'] = [];
+	foreach (pq('a') as $a) {
+		$href = pq($a)->attr('href');
+		if (!in_array($href, $data['hrefs'])) {
+			array_push($data['hrefs'], $href);
 		}
 	}
 
-	public function getUrl() {
-		return $this->_url;
-	}
-
-	public function getOriginals() {
-		return $this->_originals;
-	}
+	return $data;
 }
 
 try {
 	if (!isset($_GET['url']) || !$_GET['url']) {
 		throw new Exception('URLがありません');
 	}
-	$analyzer = new Analyzer($_GET['url']);
-	$analyzer->search();
 	$result = [
 		'status' => true,
-		'url' => $analyzer->getUrl(),
-		'originals' => $analyzer->getOriginals(),
+		'url' => $_GET['url'],
 	];
+	$result = array_merge($result, search($_GET['url']));
 } catch (Exception $e) {
 	$result = [
 		'status' => false,
-		'url' => $analyzer->getUrl(),
+		'url' => $_GET['url'],
 		'message' => $e->getMessage(),
 	];
 }
