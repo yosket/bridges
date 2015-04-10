@@ -155,7 +155,7 @@
 						<tbody>
 							<tr ng-repeat="error in Website.result.error">
 								<td>{{$index + 1}}</td>
-								<td><a href="{{error.absoluteUrl}}" target="_blank">{{error.url}}</a></td>
+								<td><a href="{{error.url}}" target="_blank">{{error.url}}</a></td>
 								<td><span class="label label-danger">{{error.status}}</span></td>
 							</tr>
 						</tbody>
@@ -176,7 +176,7 @@
 						<tbody>
 							<tr ng-repeat="warning in Website.result.warning">
 								<td>{{$index + 1}}</td>
-								<td><a href="{{warning.absoluteUrl}}" target="_blank">{{warning.url}}</a></td>
+								<td><a href="{{warning.url}}" target="_blank">{{warning.url}}</a></td>
 								<td><span class="label label-warning"><i class="fa fa-exclamation-triangle"></i></span></td>
 							</tr>
 						</tbody>

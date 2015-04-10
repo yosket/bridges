@@ -94,7 +94,7 @@
 							var data = response.data;
 							if (data.status) {
 								angular.forEach(data.originals, function(href) {
-									var absoluteUrl = getAbsoluteUrl(href, self.top);
+									var absoluteUrl = getAbsoluteUrl(href, data.url);
 									var addInnerPage = function() {
 										// 現在のページにまだ存在しないURLなら
 										if (!isDuplicated(href, self.pages[self.current].inner)) {
@@ -275,25 +275,22 @@
 		};
 	});
 
+	// 任意のウェブページのURLとhref属性の値から絶対URLを返す
 	var getAbsoluteUrl;
 	window.onload = function() {
 		getAbsoluteUrl = (function() {
-			var wimg = new Image();
+			// 事前にiframeを追加しとく
 			var work = document.createElement('iframe');
 			work.style.display = 'none';
 			document.body.appendChild(work);
+			// 実際の関数部分
 			return function(path, base) {
 				var wdoc = work.contentWindow.document;
 				var url = path;
-				if (!base) {
-					wimg.src = path;
-					url = wimg.src;
-				} else {
-					wdoc.open();
-					wdoc.write('<head><base href="' + base + '" \/><\/head><body><a href="' + path + '"><\/a><\/body>');
-					wdoc.close();
-					url = wdoc.getElementsByTagName('a')[0].href;
-				}
+				wdoc.open();
+				wdoc.write('<head><base href="' + base + '"><\/head><body><a href="' + path + '"><\/a><\/body>');
+				wdoc.close();
+				url = wdoc.getElementsByTagName('a')[0].href;
 				return url;
 			};
 		})();

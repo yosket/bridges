@@ -33,6 +33,10 @@ class Analyzer {
 		}
 	}
 
+	public function getUrl() {
+		return $this->_url;
+	}
+
 	public function getOriginals() {
 		return $this->_originals;
 	}
@@ -46,11 +50,13 @@ try {
 	$analyzer->search();
 	$result = [
 		'status' => true,
+		'url' => $analyzer->getUrl(),
 		'originals' => $analyzer->getOriginals(),
 	];
 } catch (Exception $e) {
 	$result = [
 		'status' => false,
+		'url' => $analyzer->getUrl(),
 		'message' => $e->getMessage(),
 	];
 }
