@@ -39,7 +39,7 @@
   js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.3&appId=867594183306256";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top" id="header">
 	<div class="container-fluid">
 		<div class="navbar-header"><a href="/" class="navbar-brand">Bridges</a></div>
 		<ul class="nav navbar-nav pull-right navbar-text list-inline">
@@ -62,13 +62,19 @@
 			<small>The broken links finder.</small>
 		</h1>
 		<form name="checker" ng-submit="Website.check(query)" class="row">
-			<p><input type="url" name="url" ng-model="query" placeholder="Enter your site's URL" required></p>
+			<p><input type="url" name="url" ng-model="query" placeholder="Enter your site's URL" required autocomplete></p>
 			<p><input type="submit" value="Check !!" class="btn btn-default btn-start" ng-disabled="checker.$invalid"></p>
 		</form>
 	</div>
 </div>
 <div class="notification alert alert-info" ng-show="Website.message">
 	<div class="container-fluid">
+		<p class="text-right">{{Website.current}} / {{Website.pages.length}}</p>
+		<div class="progress">
+			<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: {{Website.current / Website.pages.length * 100}}%">
+				<span class="sr-only">45% Complete</span>
+			</div>
+		</div>
 		<p>
 			<img src="http://capture.heartrails.com/400x300?{{Website.pages[Website.current].url}}" alt="{{Website.pages[Website.current].url}}">
 		</p>
@@ -97,10 +103,7 @@
 	</div>
 	<div class="summary" ng-class="{back: summary()}">
 		<div class="container-fluid">
-			<div class="pull-right">
-				<a href="/" class="btn btn-default"><i class="fa fa-undo fa-lg"></i> Check other URL</a>
-			</div>
-			<section>
+			<section class="clearfix">
 				<h2 class="page-header"><i class="fa fa-sitemap fa-lg"></i> Your site</h2>
 				<p class="lead"><a href="{{Website.top}}" target="_blank">{{Website.top}}</a></p>
 			</section>
@@ -183,12 +186,15 @@
 					</table>
 				</div>
 			</section>
+			<div class="text-center">
+				<a href="/" class="btn btn-default btn-lg"><i class="fa fa-undo fa-lg"></i> Check other URL</a>
+			</div>
 		</div>
 	</div>
 	<div class="result-box" id="result-box-{{$index}}" ng-repeat="page in Website.pages" ng-show="checkSelectedResultBox($index)">
 		<div class="container-fluid">
 			<p class="text-right"><button type="button" class="close" ng-click="closeResultBox($index)">&times;</button></p>
-			<div class="row" ng-if="page.enabled">
+			<div class="row">
 				<div class="col-md-4">
 					<a href="{{page.url}}" target="_blank">
 						<img src="http://capture.heartrails.com/400x300?{{page.url}}" alt="{{page.url}}">
@@ -211,6 +217,7 @@
 				<thead>
 					<tr>
 						<th>No.</th>
+						<th>Text</th>
 						<th>Href value</th>
 						<th>Status</th>
 					</tr>
@@ -218,6 +225,7 @@
 				<tbody>
 					<tr ng-repeat="innerPage in page.inner">
 						<td>{{$index + 1}}</td>
+						<td>{{innerPage.text}}</td>
 						<td><a href="{{innerPage.absoluteUrl}}" target="_blank">{{innerPage.url}}</a></td>
 						<td ng-if="innerPage.enabled == null">
 							<span class="text-muted">Checking ...</span>
@@ -237,7 +245,7 @@
 		</div>
 	</div>
 </div>
-<footer class="footer">
+<footer class="footer" id="footer">
 	<small>&copy; 2015 Bridges.</small>
 </footer>
 <svg version="1.1" xmlns='http://www.w3.org/2000/svg'>

@@ -220,6 +220,10 @@ img {
 		a {
 			color: #fff;
 		}
+		img {
+			max-width: 160px;
+			box-shadow: none;
+		}
 	}
 }
 .label {

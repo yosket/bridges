@@ -5,7 +5,6 @@ require_once('../../Vendor/autoload.php');
 // URL内の要素を検索
 function search($url) {
 	phpQuery::newDocumentFile($url);
-	// phpQuery::newDocument($html);
 	$data = [];
 
 	// title要素を取得
@@ -14,11 +13,11 @@ function search($url) {
 	}
 
 	// a要素を検索してhref属性を取得
-	$data['hrefs'] = [];
+	$data['a'] = [];
 	foreach (pq('a') as $a) {
 		$href = pq($a)->attr('href');
-		if (!in_array($href, $data['hrefs'])) {
-			array_push($data['hrefs'], $href);
+		if (!array_key_exists($href, $data['a'])) {
+			$data['a'][$href] = pq($a)->html();
 		}
 	}
 

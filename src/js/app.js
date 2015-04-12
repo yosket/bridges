@@ -4,6 +4,69 @@
 	var app = angular.module('app', ['ngAnimate']);
 
 	app.factory('Website', function($q, $http) {
+
+		// 任意のウェブページのURLとhref属性の値から絶対URLを返す
+		var getAbsoluteUrl;
+		window.addEventListener('load', function() {
+			getAbsoluteUrl = (function() {
+				// 事前にiframeを追加しとく
+				var work = document.createElement('iframe');
+				work.style.display = 'none';
+				document.body.appendChild(work);
+				// 実際の関数部分
+				return function(path, base) {
+					var wdoc = work.contentWindow.document;
+					var url = path;
+					wdoc.open();
+					wdoc.write('<head><base href="' + base + '"><\/head><body><a href="' + path + '"><\/a><\/body>');
+					wdoc.close();
+					url = wdoc.getElementsByTagName('a')[0].href;
+					return url;
+				};
+			})();
+		});
+
+		// 配列内の重複チェック関数
+		var isDuplicated = function(str, array) {
+			var duplicated = false;
+			angular.forEach(array, function(value) {
+				if (value === str) {
+					duplicated = true;
+				}
+			});
+			return duplicated;
+		};
+
+		// あるURLのアクセス可否を調べる関数
+		var isAccessible = function(url) {
+			var d = $q.defer();
+			var api = 'api/headers.php';
+			var query = {
+				params: {
+					url: url
+				}
+			};
+			var callback = function(response) {
+				switch (response.data.status) {
+					case 200:
+						d.resolve(response.data.status);
+						break;
+					case 404:
+						d.reject(response.data.status);
+						break;
+					default:
+						// status が false なら
+						if (!response.data.status) {
+							// エラーにする処理
+						}
+						d.notify(response.data.status);
+						break;
+				}
+			};
+			$http.get(api, query).then(callback);
+			return d.promise;
+		};
+
 		return {
 			// 入力されたURLを格納
 			top: '',
@@ -46,45 +109,6 @@
 					// 1ページ内をスクレイピングしてURLを取得する関数
 					var search = function(url) {
 						var d = $q.defer();
-						// 配列内の重複チェック関数
-						var isDuplicated = function(str, array) {
-							var duplicated = false;
-							angular.forEach(array, function(value) {
-								if (value === str) {
-									duplicated = true;
-								}
-							});
-							return duplicated;
-						};
-						// あるURLのアクセス可否を調べる関数
-						var isAccessible = function(url) {
-							var d = $q.defer();
-							var api = 'api/headers.php';
-							var query = {
-								params: {
-									url: url
-								}
-							};
-							var callback = function(response) {
-								switch (response.data.status) {
-									case 200:
-										d.resolve(response.data.status);
-										break;
-									case 404:
-										d.reject(response.data.status);
-										break;
-									default:
-										// status が false なら
-										if (!response.data.status) {
-											// エラーにする処理
-										}
-										d.notify(response.data.status);
-										break;
-								}
-							};
-							$http.get(api, query).then(callback);
-							return d.promise;
-						};
 						var api = 'api/scraping.php';
 						var query = {
 							params: {
@@ -94,98 +118,106 @@
 						var callback = function(response) {
 							var data = response.data;
 							if (data.status) {
+								// 取得したタイトルを格納
 								self.pages[self.current].title = data.title;
-								angular.forEach(data.hrefs, function(href) {
-									var absoluteUrl = getAbsoluteUrl(href, data.url);
-									var addInnerPage = function() {
-										// 現在のページにまだ存在しないURLなら
-										if (!isDuplicated(href, self.pages[self.current].inner)) {
-											// ページ内URLに追加
-											var newUrl = {
-												url: href,
-												absoluteUrl: absoluteUrl,
-												enabled: null,
-												status: null
-											};
-											self.pages[self.current].inner.push(newUrl);
-										}
+								// 取得したa要素をループ
+								angular.forEach(data.a, function(html, href) {
+									var a = {
+										url: href,
+										absoluteUrl: getAbsoluteUrl(href, data.url),
+										text: html,
+										enabled: null,
+										status: null
 									};
-									var checkCache = function() {
-										// cache に追加済みかチェック
+									var _checkCache = function(url) {
 										var cached = false;
 										angular.forEach(self.cache, function(cache) {
-											if (cache.url === absoluteUrl) {
+											if (cache.url === url) {
 												cached = cache;
-												return;
 											}
 										});
+										return cached;
+									};
+									var checkCache = function() {
+										// キャッシュに追加済みかどうかのチェック
+										var cached = _checkCache(a.absoluteUrl);
 										var index = self.current;
 										var innerIndex = self.pages[self.current].inner.length - 1;
 										if (cached) {
 											// cache に追加済みの場合はページ内URLの enabled を更新
-											self.pages[index].inner[innerIndex].enabled = cached.enabled;
-											self.pages[index].inner[innerIndex].status = cached.status;
+											a.enabled = cached.enabled;
+											a.status = cached.status;
 											self.pages[index].count[cached.enabled]++;
 										} else {
 											var pushToCache = function(enabled, result) {
 												// cache に追加
 												var newUrl = {
-													url: absoluteUrl,
+													url: a.absoluteUrl,
 													enabled: enabled,
 													status: result
 												};
 												self.cache.push(newUrl);
 											};
 											var success = function(result) {
-												self.pages[index].inner[innerIndex].enabled = 'success';
-												self.pages[index].inner[innerIndex].status = result;
+												a.enabled = 'success';
+												a.status = result;
 												self.pages[index].count.success++;
-												self.result.success.push({
-													url: self.pages[index].inner[innerIndex].absoluteUrl,
-													status: result
-												});
-												pushToCache('success', result);
+												if (!_checkCache(a.absoluteUrl)) {
+													self.result.success.push({
+														url: a.absoluteUrl,
+														status: result
+													});
+													pushToCache('success', result);
+												}
 											};
 											var failed = function(result) {
-												self.pages[index].inner[innerIndex].enabled = 'error';
-												self.pages[index].inner[innerIndex].status = result;
+												a.enabled = 'error';
+												a.status = result;
 												self.pages[index].count.error++;
-												self.result.error.push({
-													url: self.pages[index].inner[innerIndex].absoluteUrl,
-													status: result
-												});
-												pushToCache('error', result);
+												if (!_checkCache(a.absoluteUrl)) {
+													self.result.error.push({
+														url: a.absoluteUrl,
+														status: result
+													});
+													pushToCache('error', result);
+												}
 											};
 											var notify = function(result) {
-												self.pages[index].inner[innerIndex].enabled = 'warning';
-												self.pages[index].inner[innerIndex].status = result;
+												a.enabled = 'warning';
+												a.status = result;
 												self.pages[index].count.warning++;
-												self.result.warning.push({
-													url: self.pages[index].inner[innerIndex].absoluteUrl,
-													status: result
-												});
-												pushToCache('warning', result);
+												if (!_checkCache(a.absoluteUrl)) {
+													self.result.warning.push({
+														url: a.absoluteUrl,
+														status: result
+													});
+													pushToCache('warning', result);
+												}
 											};
 											// cache に未追加の場合はアクセス可否をチェック
-											isAccessible(absoluteUrl).then(success, failed, notify);
+											isAccessible(a.absoluteUrl).then(success, failed, notify);
 										}
 									};
 									var addPage = function() {
 										// pages に追加済みかチェック
-										var dFlg = false;
+										var isAdded = false;
 										angular.forEach(self.pages, function(item) {
-											if (item.url === absoluteUrl) {
-												dFlg = true;
+											if (item.url === a.absoluteUrl) {
+												isAdded = true;
 											}
 										});
 										// サイト内のURLかどうかチェック
-										var isInnerSite = absoluteUrl.indexOf(self.top) === 0;
+										var isInnerSite = a.absoluteUrl.indexOf(self.top) === 0;
 										// 画像ファイルかどうかチェック
-										var isImageFile = absoluteUrl.search(/(.jpg|.gif|.png)$/i) !== -1;
+										var isImageFile = a.absoluteUrl.search(/(.jpg|.gif|.png)$/i) !== -1;
+										// クエリ付きかどうかチェック
+										var hasQuery = a.absoluteUrl.search(/\?/) !== -1;
+										// ハッシュ付きかどうかチェック
+										var hasHash = a.absoluteUrl.search(/#/) !== -1;
 										// 条件に合致すれば pages に追加
-										if (isInnerSite && !dFlg && !isImageFile) {
+										if (!isAdded && isInnerSite && !isImageFile && !hasQuery && !hasHash) {
 											var newPage = {
-												url: absoluteUrl,
+												url: a.absoluteUrl,
 												title: '',
 												enabled: null,
 												inner: [],
@@ -198,8 +230,9 @@
 											self.pages.push(newPage);
 										}
 									};
-									addInnerPage();
 									checkCache();
+									// ページ内URLに追加
+									self.pages[self.current].inner.push(a);
 									addPage();
 								});
 								d.resolve();
@@ -237,38 +270,50 @@
 	});
 
 	app.controller('AppController', ['$scope', 'Website', function AppController($scope, Website) {
+
+		// 画面の表示領域調整
+		var headerHeight, footerHeight;
 		var setHeight = function(selectors) {
 			var winHeight = document.documentElement.clientHeight;
-			var displayHeight = winHeight - 57 - 47;
+			if (!headerHeight) {
+				headerHeight = document.getElementById('header').clientHeight;
+			}
+			if (!footerHeight) {
+				footerHeight = document.getElementById('footer').clientHeight;
+			}
+			var displayHeight = winHeight - headerHeight - footerHeight;
 			angular.forEach(selectors, function(selector) {
 				angular.element(document.querySelectorAll(selector)).css('height', displayHeight + 'px');
 			});
 		};
-		$scope.Website = Website;
-		$scope.$watch('Website.message', function() {
-			setHeight(['.display']);
+		window.addEventListener('load', function() {
+			setHeight(['.display', '.notification']);
 		});
-		setHeight(['.display', '.notification']);
+		window.addEventListener('resize', function() {
+			setHeight(['.display', '.notification']);
+		});
+
+		// Websiteサービス全体を監視
+		$scope.Website = Website;
+
+		// resultBox選択処理
+		$scope.selectedResultBox = { id: 0 };
 		$scope.checkChildRadio = function(index) {
 			if ($scope.selectedResultBox.id == index + 1) {
 				return $scope.closeResultBox(index);
 			} else {
-				return $scope.selectedResultBox.id = index + 1;
+				$scope.selectedResultBox.id = index + 1;
 			}
 		};
-		$scope.selectedResultBox = { id: 0 };
 		$scope.checkSelectedResultBox = function(index) {
 			return $scope.selectedResultBox.id == index + 1;
 		};
 		$scope.closeResultBox = function(index) {
-			return $scope.selectedResultBox.id = 0;
+			$scope.selectedResultBox.id = 0;
 		};
 		$scope.summary = function() {
 			return $scope.selectedResultBox.id > 0;
 		};
-		window.addEventListener('resize', function() {
-			setHeight(['.display', '.notification']);
-		});
 	}]);
 
 	app.filter('deleteDomain', function(Website) {
@@ -277,25 +322,4 @@
 			return result ? result : Website.top;
 		};
 	});
-
-	// 任意のウェブページのURLとhref属性の値から絶対URLを返す
-	var getAbsoluteUrl;
-	window.onload = function() {
-		getAbsoluteUrl = (function() {
-			// 事前にiframeを追加しとく
-			var work = document.createElement('iframe');
-			work.style.display = 'none';
-			document.body.appendChild(work);
-			// 実際の関数部分
-			return function(path, base) {
-				var wdoc = work.contentWindow.document;
-				var url = path;
-				wdoc.open();
-				wdoc.write('<head><base href="' + base + '"><\/head><body><a href="' + path + '"><\/a><\/body>');
-				wdoc.close();
-				url = wdoc.getElementsByTagName('a')[0].href;
-				return url;
-			};
-		})();
-	};
 })();
