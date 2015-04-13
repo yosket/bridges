@@ -122,13 +122,9 @@ img {
 	overflow-x: hidden;
 	overflow-y: auto;
 	.page {
-		border-top: 1px solid #666;
 		position: relative;
 		-webkit-transition: background .3s;
 		transition: background .3s;
-		&:first-child {
-			border-top: 0;
-		}
 		> div {
 			word-break: break-all;
 			display: block;
@@ -143,6 +139,8 @@ img {
 			}
 			&:hover {
 				background: $brand-primary;
+				-webkit-transform: scale(1.1);
+				transform: scale(1.1);
 			}
 			input {
 				display: none;
