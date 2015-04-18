@@ -1,3 +1,6 @@
-'use strict';
+var app;
 
-var app = angular.module('app', ['ngAnimate']);
+(function() {
+	'use strict';
+	app = angular.module('app', ['ngAnimate']);
+})();
