@@ -316,6 +316,13 @@ h2 img {
 	text-align: center;
 	color: #fff;
 	padding: 1em 0;
+	a {
+		color: #fff;
+		text-decoration: underline;
+		&:hover {
+			text-decoration: none;
+		}
+	}
 }
 svg {
 	height: 0;
