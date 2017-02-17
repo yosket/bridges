@@ -14,6 +14,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "bin-dir": "vendor/bin",
         "vendor-dir": "Vendor"

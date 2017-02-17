@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "node ./dist/bin/www",
-    "postinstall": "./node_modules/grunt-cli/bin/grunt build"
+    "postinstall": "bower install && grunt build"
   },
   "dependencies": {
     "grunt": "*",
