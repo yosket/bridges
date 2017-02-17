@@ -2,7 +2,7 @@
     "name": "yosuke/link_checker",
     "description": "This is check app for a website",
     "require": {
-        "electrolinux/phpquery": "dev-master"
+        "electrolinux/phpquery": "*"
     },
     "require-dev": {
         "heroku/heroku-buildpack-php": "*"

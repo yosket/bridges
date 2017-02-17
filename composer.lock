@@ -1,23 +1,24 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c2efc67155889ea879026344bee7f1be",
+    "hash": "7c758cbc3ec6c80dd75270e212eaad2e",
+    "content-hash": "fe8bf887cab02113320a87e47a2134e9",
     "packages": [
         {
             "name": "electrolinux/phpquery",
-            "version": "dev-master",
+            "version": "0.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/electrolinux/phpquery.git",
-                "reference": "aa09e7af2e8d9a965102cf50d9b657aca96fd013"
+                "reference": "6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/electrolinux/phpquery/zipball/aa09e7af2e8d9a965102cf50d9b657aca96fd013",
-                "reference": "aa09e7af2e8d9a965102cf50d9b657aca96fd013",
+                "url": "https://api.github.com/repos/electrolinux/phpquery/zipball/6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a",
+                "reference": "6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a",
                 "shasum": ""
             },
             "type": "library",
@@ -44,22 +45,22 @@
             ],
             "description": "phpQuery is a server-side, chainable, CSS3 selector driven Document Object Model (DOM) API based on jQuery JavaScript Library",
             "homepage": "http://code.google.com/p/phpquery/",
-            "time": "2014-08-08 09:03:54"
+            "time": "2013-03-21 12:39:33"
         }
     ],
     "packages-dev": [
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "dev-master",
+            "version": "v119",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "8da6b92aad89b2e7254f5eb2ad39ffac315b2282"
+                "reference": "26ebb69005d467d45f75797c1594f60818ba3fce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/8da6b92aad89b2e7254f5eb2ad39ffac315b2282",
-                "reference": "8da6b92aad89b2e7254f5eb2ad39ffac315b2282",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/26ebb69005d467d45f75797c1594f60818ba3fce",
+                "reference": "26ebb69005d467d45f75797c1594f60818ba3fce",
                 "shasum": ""
             },
             "bin": [
@@ -80,7 +81,7 @@
                 }
             ],
             "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP/HHVM and Apache2/Nginx as on Heroku",
-            "homepage": "http://github.com/heroku/heroku-buildpack-php",
+            "homepage": "https://github.com/heroku/heroku-buildpack-php",
             "keywords": [
                 "apache",
                 "apache2",
@@ -90,15 +91,13 @@
                 "nginx",
                 "php"
             ],
-            "time": "2015-03-24 19:49:58"
+            "time": "2017-01-21 00:39:13"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "electrolinux/phpquery": 20
-    },
-    "prefer-stable": false,
+    "stability-flags": [],
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
