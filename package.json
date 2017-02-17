@@ -6,6 +6,7 @@
     "postinstall": "bower install && grunt build"
   },
   "dependencies": {
+    "bower": "*",
     "grunt": "*",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.6.0",
@@ -14,5 +15,9 @@
     "grunt-contrib-watch": "*",
     "load-grunt-tasks": "^0.6.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "engines": {
+    "node": "7.5.0",
+    "npm": "4.1.2"
+  }
 }
