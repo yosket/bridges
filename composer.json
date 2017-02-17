@@ -13,7 +13,6 @@
             "email": "yosket87@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "bin-dir": "vendor/bin",
